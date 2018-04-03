@@ -1,13 +1,14 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
 
 
+
+
+
+
+
+
+
+
+# load packages
 suppressPackageStartupMessages(library(shiny))
 suppressPackageStartupMessages(library(shinythemes))
 suppressPackageStartupMessages(library(istacr))
@@ -19,6 +20,7 @@ suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(xts))
 
 
+# datasets
 b1.gasto <- suppressWarnings(istac("sec.hos.enc.ser.2530", POSIXct = TRUE)) %>%
   mutate(fecha = format(fecha, "%Y-%m-%d %H:%M:%OS"))
 b2.perfil <- suppressWarnings(istac("sec.hos.enc.ser.2597", POSIXct = TRUE)) %>%
@@ -34,7 +36,7 @@ b3.motivos <- suppressWarnings(istac("sec.hos.enc.ser.2646", POSIXct = TRUE)) %>
 
 
 
-# Define UI for application
+# user interface
 ui <- fluidPage(
   theme = shinytheme(theme = "flatly"),
   # navbarPage("ISTAC || Tourism Statistics",
@@ -167,7 +169,7 @@ ui <- fluidPage(
 
 
 
-# Define server application
+# server application
 server <- function(input, output) {
   
   df.input.1 <- reactive({
@@ -282,6 +284,6 @@ server <- function(input, output) {
    
 }
 
-# Run the application 
+# run application 
 shinyApp(ui = ui, server = server)
 
