@@ -14,7 +14,7 @@ authors.mainpanel <- mainPanel(
     
     tags$h4(
       tags$a(href="http://jmcartiles-blog.netlify.com/",
-             "José Manuel Cazorla Artiles")
+             "JosÃ© Manuel Cazorla Artiles")
     ),
     tags$p("Doctorando en Universidad de Las Palmas de Gran Canaria"),
     
@@ -22,7 +22,7 @@ authors.mainpanel <- mainPanel(
     
     tags$h4(
       tags$a(href="https://github.com/chrglez",
-             "Christian González Martel")
+             "Christian GonzÃ¡lez Martel")
     ),
     tags$p("Profesor en Universidad de Las Palmas de Gran Canaria")
     

@@ -6,21 +6,21 @@ suppressPackageStartupMessages(library(shiny))
 description.mainpanel <- mainPanel(
   fluidPage(
     
-    tags$p("Esta aplicación Shiny tiene por objeto la visualización de los datos públicos obtenidos en la ",
+    tags$p("Esta aplicaciÃ³n Shiny tiene por objeto la visualizaciÃ³n de los datos pÃºblicos obtenidos en la ",
            tags$a(href="http://www.gobiernodecanarias.org/istac/temas_estadisticos/sectorservicios/hosteleriayturismo/demanda/C00028A.html",
-                  "Encuesta sobre Gasto Turístico"),
+                  "Encuesta sobre Gasto TurÃ­stico"),
            " del",
            tags$a(href = "http://www.gobiernodecanarias.org/istac/",
-                  "Instituto Canario de Estadística (ISTAC)"),
+                  "Instituto Canario de EstadÃ­stica (ISTAC)"),
            "."),
     
     tags$p("Los datos publicados se han obtenido usando la API base del",
            tags$a(href = "http://www.gobiernodecanarias.org/istac/",
                   "ISTAC"),
-           ", a través de la librería ",
+           ", a travÃ©s de la librerÃ­a ",
            tags$a(href = "https://github.com/rOpenSpain/istacr", "istacr"),
            "."),
     
-    tags$h4("Aplicación Shiny en proceso de desarrollo... se muestran resultados preliminares.")
+    tags$h4("AplicaciÃ³n Shiny en proceso de desarrollo... se muestran resultados preliminares.")
     
   ), align = "left")
