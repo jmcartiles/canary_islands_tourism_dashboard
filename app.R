@@ -20,20 +20,27 @@ suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(xts))
 
 
-# datasets
-b1.gasto <- suppressWarnings(istac("sec.hos.enc.ser.2530", POSIXct = TRUE)) %>%
-  mutate(fecha = format(fecha, "%Y-%m-%d %H:%M:%OS"))
-b2.perfil <- suppressWarnings(istac("sec.hos.enc.ser.2597", POSIXct = TRUE)) %>%
-  mutate(fecha = format(fecha, "%Y-%m-%d %H:%M:%OS"))
-b3.motivos <- suppressWarnings(istac("sec.hos.enc.ser.2646", POSIXct = TRUE)) %>%
-  mutate(fecha = format(fecha, "%Y-%m-%d %H:%M:%OS"))
+# # datasets
+# b1.gasto <- suppressWarnings(istac("sec.hos.enc.ser.2530", POSIXct = TRUE)) %>%
+#   mutate(fecha = format(fecha, "%Y-%m-%d %H:%M:%OS"),
+#          periodicidad = replace(periodicidad, periodicidad=="cuatrimestral", "Trimestral"),
+#          periodicidad = replace(periodicidad, periodicidad=="anual", "Anual"))
+# save(b1.gasto, file = "egt_gasto_07042018.RData")
+# b2.perfil <- suppressWarnings(istac("sec.hos.enc.ser.2597", POSIXct = TRUE)) %>%
+#   mutate(fecha = format(fecha, "%Y-%m-%d %H:%M:%OS"),
+#          periodicidad = replace(periodicidad, periodicidad=="cuatrimestral", "Trimestral"),
+#          periodicidad = replace(periodicidad, periodicidad=="anual", "Anual"))
+# save(b2.perfil, file = "egt_perfil_07042018.RData")
+# b3.motivos <- suppressWarnings(istac("sec.hos.enc.ser.2646", POSIXct = TRUE)) %>%
+#   mutate(fecha = format(fecha, "%Y-%m-%d %H:%M:%OS"),
+#          periodicidad = replace(periodicidad, periodicidad=="cuatrimestral", "Trimestral"),
+#          periodicidad = replace(periodicidad, periodicidad=="anual", "Anual"))
+# save(b3.motivos, file = "egt_motivo_07042018.RData")
 
 
-# d1.gasto <- istac("sec.hos.enc.ser.2530")
-# d2.perfil <- istac("sec.hos.enc.ser.2597")
-# d3.motivos <- istac("sec.hos.enc.ser.2646")
-
-
+load(file = "egt_gasto_07042018.RData")
+load(file = "egt_perfil_07042018.RData")
+load(file = "egt_motivo_07042018.RData")
 
 
 # user interface
