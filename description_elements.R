@@ -1,8 +1,5 @@
 
 
-# load packages
-suppressPackageStartupMessages(library(shiny))
-
 description.mainpanel <- mainPanel(
   fluidPage(
     

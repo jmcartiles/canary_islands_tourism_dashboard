@@ -3,11 +3,6 @@
 
 
 
-
-
-
-
-
 # load packages
 suppressPackageStartupMessages(library(shiny))
 suppressPackageStartupMessages(library(shinythemes))
@@ -42,14 +37,16 @@ load(file = "data/egt_motivo_07042018.RData")
 
 
 # elements
-source("description_elements.R")
-source("authors_elements.R")
+source("description_elements.R", encoding = "utf-8")
+source("authors_elements.R", encoding = "utf-8")
+source("ui_expenditure_elements.R", encoding = "utf-8")
+source("ui_profile_elements.R", encoding = "utf-8")
+source("ui_travelcharacteristics_elements.R", encoding = "utf-8")
 
 
 # user interface
 ui <- fluidPage(
   theme = shinytheme(theme = "flatly"),
-  # navbarPage("ISTAC || Tourism Statistics",
   navbarPage(tagList(a("ISTAC",
                        href="http://www.gobiernodecanarias.org/istac/"),
                      " || ",
@@ -62,114 +59,24 @@ ui <- fluidPage(
              navbarMenu("Gasto turístico",
                         tabPanel("01. Gasto turístico total por islas según países de residencia",
                                  sidebarLayout(
-                                   sidebarPanel(
-                                     selectInput("indgasto1", "Indicadores de gasto",
-                                                 choices = c(b1.gasto$`Indicadores de gasto` %>%
-                                                               unique() %>% sort() %>% as.vector()),
-                                                 selected = "Gasto total"),
-                                     selectInput("indicador1", "Indicadores",
-                                                 choices = c(b1.gasto$Indicadores %>%
-                                                               unique() %>% sort() %>% as.vector()),
-                                                 selected = "Valor absoluto"),
-                                     selectInput("residencia1", "Países de residencia",
-                                                 choices = c(b1.gasto$`Países de residencia` %>%
-                                                               unique() %>% sort() %>% as.vector()),
-                                                 selected = "TOTAL PAÍSES" #, multiple = TRUE
-                                                 ),
-                                     selectInput("isla1", "Islas",
-                                                 choices = c(b1.gasto$Islas %>%
-                                                               unique() %>% sort() %>% as.vector()),
-                                                 selected = "CANARIAS"),
-                                     selectInput("period1", "Periodicidad",
-                                                 choices = c(b1.gasto$periodicidad %>%
-                                                               unique() %>% sort() %>% as.vector()),
-                                                 selected = "anual"),
-                                     downloadButton('download1',"Descargar datos (csv)")
-                                   ),
-                                   mainPanel(
-                                     # tabsetPanel(
-                                     # tabPanel("Gráficos", plotOutput("plot")),
-                                     # tabPanel("Perfil del turista por islas", DT::dataTableOutput("df2"))
-                                     h4("01. Gasto turístico total por islas según países de residencia", align = "left"),
-                                     h1("", align = "left"),
-                                     dygraphOutput("df1graph"),
-                                     h1("", align = "left"),
-                                     DT::dataTableOutput("df1")
-                                     
-                                     # )
-                                   )))),
-             
+                                   gasto01.sidebarpanel,
+                                   gasto01.mainpanel
+                                   ))),
              
              navbarMenu("Perfil del turista",
-             tabPanel("01. Turistas por islas según grupos de edad, sexos y países de residencia",
+             tabPanel("01. Turistas por islas según grupos de edad, sexos y pa?ses de residencia",
                       sidebarLayout(
-                        sidebarPanel(
-                          selectInput("residencia2", "Países de residencia",
-                                      choices = c(b2.perfil$`Países de residencia` %>%
-                                                    unique() %>% sort() %>% as.vector()),
-                                      selected = "TOTAL PAÍSES"),
-                          selectInput("isla2", "Islas",
-                                      choices = c(b2.perfil$Islas %>%
-                                                    unique() %>% sort() %>% as.vector()),
-                                      selected = "CANARIAS"),
-                          selectInput("edad2", "Grupo de Edad",
-                                     choices = c(b2.perfil$Edades %>%
-                                                   unique() %>% sort() %>% as.vector()),
-                                     selected = "TOTAL GRUPOS DE EDAD"),
-                          selectInput("sexo2", "Sexos",
-                                     choices = c(b2.perfil$Sexos %>%
-                                                   unique() %>% sort() %>% as.vector()),
-                                     selected = "AMBOS SEXOS"),
-                          selectInput("period2", "Periodicidad",
-                                     choices = c(b2.perfil$periodicidad %>%
-                                                   unique() %>% sort() %>% as.vector()),
-                                     selected = "anual"),
-                         downloadButton('download2',"Descargar datos (csv)")
-                         ),
-                         mainPanel(
-                           # tabsetPanel(
-                             # tabPanel("Gráficos", plotOutput("plot")),
-                             # tabPanel("Perfil del turista por islas", DT::dataTableOutput("df2"))
-                           h4("01. Turistas por islas según grupos de edad, sexos y países de residencia", align = "left"),
-                           h1("", align = "left"),
-                           dygraphOutput("df2graph"),
-                           h1("", align = "left"),
-                           DT::dataTableOutput("df2")
-                             # )
-                       )))),
+                        perfil01.sidebarpanel,
+                        perfil01.mainpanel
+                       ))),
              
              
              navbarMenu("Características del viaje",
              tabPanel("01. Turistas por islas según países de residencia y motivos de la estancia",
                       sidebarLayout(
-                        sidebarPanel(
-                          selectInput("residencia3", "Países de residencia",
-                                      choices = c(b3.motivos$`Países de residencia` %>%
-                                                    unique() %>% sort() %>% as.vector()),
-                                      selected = "TOTAL PAÍSES"),
-                          selectInput("isla3", "Islas",
-                                      choices = c(b3.motivos$Islas %>%
-                                                    unique() %>% sort() %>% as.vector()),
-                                      selected = "CANARIAS"),
-                          selectInput("motivo3", "Motivos de la estancia",
-                                      choices = c(b3.motivos$`Motivos de la estancia`
-                                                  %>% unique() %>% sort() %>% as.vector()),
-                                      selected = "TOTAL"),
-                          selectInput("period3", "Periodicidad",
-                                      choices = c(b3.motivos$periodicidad %>%
-                                                    unique() %>% sort() %>% as.vector()),
-                                      selected = "anual"),
-                          downloadButton('download3',"Descargar datos (csv)")
-                        ),
-                        mainPanel(
-                        #   tabsetPanel(
-                        #     tabPanel("Características de los viajes por islas", DT::dataTableOutput("df3"))
-                          h4("01. Turistas por islas según países de residencia y motivos de la estancia", align = "left"),
-                          h1("", align = "left"),
-                          dygraphOutput("df3graph"),
-                          h1("", align = "left"),
-                          DT::dataTableOutput("df3")
-                        )))),
+                        caractviaje01.sidebarpanel,
+                        caractviaje01.mainpanel
+                        ))),
              
              tabPanel("Autores",
                       authors.mainpanel
@@ -177,9 +84,6 @@ ui <- fluidPage(
              
              )
 )
-
-
-
 
 
 
@@ -228,18 +132,6 @@ server <- function(input, output) {
    output$df3 <- DT::renderDataTable({
      df.input.3()
    })
-   
-   # output$plot <- renderPlot({
-   #   ggplot(df.input(), aes(fecha, valor)) +
-   #     geom_line() +
-   #     geom_point() +
-   #     xlab("") +
-   #     ylab("") +
-   #     theme(
-   #       panel.background = element_blank(),
-   #       axis.ticks = element_blank()
-   #     )
-   # })
    
    
    output$df1graph <- renderDygraph({

@@ -2,9 +2,6 @@
 
 
 
-suppressPackageStartupMessages(library(shiny))
-
-
 authors.mainpanel <- mainPanel(
   fluidPage(
     
