@@ -20,7 +20,7 @@ suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(xts))
 
 
-# # datasets
+# datasets
 # b1.gasto <- suppressWarnings(istac("sec.hos.enc.ser.2530", POSIXct = TRUE)) %>%
 #   mutate(fecha = format(fecha, "%Y-%m-%d %H:%M:%OS"),
 #          periodicidad = replace(periodicidad, periodicidad=="cuatrimestral", "Trimestral"),
@@ -35,12 +35,15 @@ suppressPackageStartupMessages(library(xts))
 #   mutate(fecha = format(fecha, "%Y-%m-%d %H:%M:%OS"),
 #          periodicidad = replace(periodicidad, periodicidad=="cuatrimestral", "Trimestral"),
 #          periodicidad = replace(periodicidad, periodicidad=="anual", "Anual"))
-# save(b3.motivos, file = "egt_motivo_07042018.RData")
-
-
+# save(b3.motivos, file = "egt_motivo_07042018.RData"
 load(file = "data/egt_gasto_07042018.RData")
 load(file = "data/egt_perfil_07042018.RData")
 load(file = "data/egt_motivo_07042018.RData")
+
+
+# elements
+source("description_elements.R")
+source("authors_elements.R")
 
 
 # user interface
@@ -54,27 +57,7 @@ ui <- fluidPage(
                        href="http://www.gobiernodecanarias.org/istac/temas_estadisticos/sectorservicios/hosteleriayturismo/")),
              
              tabPanel("Descripción",
-                      mainPanel(
-                        fluidPage(
-                          
-                          tags$p("Esta aplicación Shiny tiene por objeto la visualización de los datos de públicos obtenidos en la ",
-                                 tags$a(href="http://www.gobiernodecanarias.org/istac/temas_estadisticos/sectorservicios/hosteleriayturismo/demanda/C00028A.html",
-                                        "Encuesta sobre Gasto Turístico"),
-                                 " del",
-                                 tags$a(href = "http://www.gobiernodecanarias.org/istac/",
-                                        "Instituto Canario de Estadística (ISTAC)"),
-                                 "."),
-                          
-                          tags$p("Los datos publicados en esta aplicación se han obtenido usando la API base del",
-                                 tags$a(href = "http://www.gobiernodecanarias.org/istac/",
-                                        "ISTAC"),
-                                 ", a través de la librería ",
-                                 tags$a(href = "https://github.com/rOpenSpain/istacr", "istacr"),
-                                 "."),
-                          
-                          tags$h4("Aplicación Shiny en proceso de desarrollo... se muestran resultados preliminares.")
-                          
-                          ), align = "left")),
+                      description.mainpanel),
              
              navbarMenu("Gasto turístico",
                         tabPanel("01. Gasto turístico total por islas según países de residencia",
@@ -189,28 +172,8 @@ ui <- fluidPage(
                         )))),
              
              tabPanel("Autores",
-                      mainPanel(
-                        fluidPage(
-                          
-                          tags$h3("Listado de Autores:"),
-                          
-                          tags$h2(""),
-                          
-                          tags$h4(
-                                 tags$a(href="http://jmcartiles-blog.netlify.com/",
-                                        "José Manuel Cazorla Artiles")
-                                 ),
-                          tags$p("Doctorando en Universidad de Las Palmas de Gran Canaria"),
-                          
-                          tags$h2(""),
-                          
-                          tags$h4(
-                            tags$a(href="https://github.com/chrglez",
-                                   "Christian González Martel")
-                          ),
-                          tags$p("Profesor en Universidad de Las Palmas de Gran Canaria")
-                          
-                        ), align = "center"))
+                      authors.mainpanel
+                      )
              
              )
 )
