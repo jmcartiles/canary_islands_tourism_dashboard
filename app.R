@@ -53,7 +53,28 @@ ui <- fluidPage(
                      a("Turismo",
                        href="http://www.gobiernodecanarias.org/istac/temas_estadisticos/sectorservicios/hosteleriayturismo/")),
              
-             tabPanel("Descripción"),
+             tabPanel("Descripción",
+                      mainPanel(
+                        fluidPage(
+                          
+                          tags$p("Esta aplicación Shiny tiene por objeto la visualización de los datos de públicos obtenidos en la ",
+                                 tags$a(href="http://www.gobiernodecanarias.org/istac/temas_estadisticos/sectorservicios/hosteleriayturismo/demanda/C00028A.html",
+                                        "Encuesta sobre Gasto Turístico"),
+                                 " del",
+                                 tags$a(href = "http://www.gobiernodecanarias.org/istac/",
+                                        "Instituto Canario de Estadística (ISTAC)"),
+                                 "."),
+                          
+                          tags$p("Los datos publicados en esta aplicación se han obtenido usando la API base del",
+                                 tags$a(href = "http://www.gobiernodecanarias.org/istac/",
+                                        "ISTAC"),
+                                 ", a través de la librería ",
+                                 tags$a(href = "https://github.com/rOpenSpain/istacr", "istacr"),
+                                 "."),
+                          
+                          tags$h4("Aplicación Shiny en proceso de desarrollo... se muestran resultados preliminares.")
+                          
+                          ), align = "left")),
              
              navbarMenu("Gasto turístico",
                         tabPanel("01. Gasto turístico total por islas según países de residencia",
@@ -95,6 +116,7 @@ ui <- fluidPage(
                                      # )
                                    )))),
              
+             
              navbarMenu("Perfil del turista",
              tabPanel("01. Turistas por islas según grupos de edad, sexos y países de residencia",
                       sidebarLayout(
@@ -133,6 +155,7 @@ ui <- fluidPage(
                              # )
                        )))),
              
+             
              navbarMenu("Características del viaje",
              tabPanel("01. Turistas por islas según países de residencia y motivos de la estancia",
                       sidebarLayout(
@@ -165,7 +188,29 @@ ui <- fluidPage(
                           DT::dataTableOutput("df3")
                         )))),
              
-             tabPanel("Autores")
+             tabPanel("Autores",
+                      mainPanel(
+                        fluidPage(
+                          
+                          tags$h3("Listado de Autores:"),
+                          
+                          tags$h2(""),
+                          
+                          tags$h4(
+                                 tags$a(href="http://jmcartiles-blog.netlify.com/",
+                                        "José Manuel Cazorla Artiles")
+                                 ),
+                          tags$p("Doctorando en Universidad de Las Palmas de Gran Canaria"),
+                          
+                          tags$h2(""),
+                          
+                          tags$h4(
+                            tags$a(href="https://github.com/chrglez",
+                                   "Christian González Martel")
+                          ),
+                          tags$p("Profesor en Universidad de Las Palmas de Gran Canaria")
+                          
+                        ), align = "center"))
              
              )
 )
