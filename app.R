@@ -70,7 +70,8 @@ ui <- fluidPage(
                                      selectInput("residencia1", "Países de residencia",
                                                  choices = c(b1.gasto$`Países de residencia` %>%
                                                                unique() %>% sort() %>% as.vector()),
-                                                 selected = "TOTAL PAÍSES", multiple = TRUE),
+                                                 selected = "TOTAL PAÍSES" #, multiple = TRUE
+                                                 ),
                                      selectInput("isla1", "Islas",
                                                  choices = c(b1.gasto$Islas %>%
                                                                unique() %>% sort() %>% as.vector()),
