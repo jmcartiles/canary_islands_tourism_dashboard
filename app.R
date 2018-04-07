@@ -38,9 +38,9 @@ suppressPackageStartupMessages(library(xts))
 # save(b3.motivos, file = "egt_motivo_07042018.RData")
 
 
-load(file = "egt_gasto_07042018.RData")
-load(file = "egt_perfil_07042018.RData")
-load(file = "egt_motivo_07042018.RData")
+load(file = "data/egt_gasto_07042018.RData")
+load(file = "data/egt_perfil_07042018.RData")
+load(file = "data/egt_motivo_07042018.RData")
 
 
 # user interface
@@ -70,7 +70,7 @@ ui <- fluidPage(
                                      selectInput("residencia1", "Países de residencia",
                                                  choices = c(b1.gasto$`Países de residencia` %>%
                                                                unique() %>% sort() %>% as.vector()),
-                                                 selected = "TOTAL PAÍSES"),
+                                                 selected = "TOTAL PAÍSES", multiple = TRUE),
                                      selectInput("isla1", "Islas",
                                                  choices = c(b1.gasto$Islas %>%
                                                                unique() %>% sort() %>% as.vector()),
@@ -182,7 +182,7 @@ server <- function(input, output) {
   df.input.1 <- reactive({
     data1 <- b1.gasto
     data1 <- filter(data1, `Indicadores de gasto` == input$indgasto1)
-    data1 <- filter(data1, `Países de residencia` == input$residencia1)
+    data1 <- filter(data1, `Países de residencia` %in% input$residencia1)
     data1 <- filter(data1, Indicadores == input$indicador1)
     data1 <- filter(data1, periodicidad == input$period1)
     data1 <- filter(data1, Islas == input$isla1)
