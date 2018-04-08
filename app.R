@@ -143,6 +143,11 @@ server <- function(input, output) {
      data1 <- filter(data1, Islas == input$isla1)
      xts(data1$valor, as.Date(data1$fecha, format = "%Y-%m-%d %H:%M:%OS")) %>%
        dygraph() %>%
+       dyAxis(
+         name = "y",
+         valueFormatter = 'function(d){return d}',
+         axisLabelFormatter = 'function(d){return Math.round(d/1e6) + " mill."}'
+       ) %>%
        dyRangeSelector()
    })
    
@@ -155,6 +160,11 @@ server <- function(input, output) {
      data2 <- filter(data2, Islas == input$isla2)
      xts(data2$valor, as.Date(data2$fecha, format = "%Y-%m-%d %H:%M:%OS")) %>%
        dygraph() %>%
+       dyAxis(
+         name = "y",
+         valueFormatter = 'function(d){return d}',
+         axisLabelFormatter = 'function(d){return Math.round(d/1e6) + " mill."}'
+       ) %>%
        dyRangeSelector()
    })
    
@@ -166,6 +176,11 @@ server <- function(input, output) {
      data3 <- filter(data3, Islas == input$isla3)
      xts(data3$valor, as.Date(data3$fecha, format = "%Y-%m-%d %H:%M:%OS")) %>%
        dygraph() %>%
+       dyAxis(
+         name = "y",
+         valueFormatter = 'function(d){return d}',
+         axisLabelFormatter = 'function(d){return Math.round(d/1e6) + " mill."}'
+       ) %>%
        dyRangeSelector()
    })
    
