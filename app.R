@@ -64,7 +64,7 @@ ui <- fluidPage(
                                    ))),
              
              navbarMenu("Perfil del turista",
-             tabPanel("01. Turistas por islas según grupos de edad, sexos y pa?ses de residencia",
+             tabPanel("01. Turistas por islas según grupos de edad, sexos y países de residencia",
                       sidebarLayout(
                         perfil01.sidebarpanel,
                         perfil01.mainpanel

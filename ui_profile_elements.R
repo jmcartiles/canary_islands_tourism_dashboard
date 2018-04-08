@@ -7,7 +7,7 @@ load(file = "data/egt_perfil_07042018.RData")
 
 ## A. sidebarpanel
 perfil01.sidebarpanel <- sidebarPanel(
-  selectInput("residencia2", "Pa?ses de residencia",
+  selectInput("residencia2", "Países de residencia",
               choices = c(b2.perfil$`Países de residencia` %>%
                             unique() %>% sort() %>% as.vector()),
               selected = "TOTAL PAÍSES"),
