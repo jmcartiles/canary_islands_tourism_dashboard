@@ -2,7 +2,7 @@
 
 
 # datasets
-load(file = "data/egt_motivo_07042018.RData")
+load(file = "data/egt_motivo_2646.RData")
 
 
 # 01. 01. Turistas por islas segun paises de residencia y motivos de la estancia ----
@@ -12,7 +12,7 @@ caractviaje01.sidebarpanel <- sidebarPanel(
     selectInput("residencia3", "Países de residencia",
                 choices = c(b3.motivos$`Países de residencia` %>%
                               unique() %>% sort() %>% as.vector()),
-                selected = "TOTAL PAÍSES"),
+                selected = "TOTAL PAÍSES", multiple = TRUE),
     selectInput("isla3", "Islas",
                 choices = c(b3.motivos$Islas %>%
                               unique() %>% sort() %>% as.vector()),

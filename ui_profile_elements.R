@@ -1,7 +1,8 @@
 
 
+
 # datasets
-load(file = "data/egt_perfil_07042018.RData")
+load(file = "data/egt_perfil_2597.RData")
 
 # 01. Turistas por islas segUn grupos de edad, sexos y paIses de residencia ----
 
@@ -10,7 +11,7 @@ perfil01.sidebarpanel <- sidebarPanel(
   selectInput("residencia2", "Países de residencia",
               choices = c(b2.perfil$`Países de residencia` %>%
                             unique() %>% sort() %>% as.vector()),
-              selected = "TOTAL PAÍSES"),
+              selected = "TOTAL PAÍSES", multiple = TRUE),
   selectInput("isla2", "Islas",
               choices = c(b2.perfil$Islas %>%
                             unique() %>% sort() %>% as.vector()),

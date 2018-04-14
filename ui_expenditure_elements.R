@@ -2,7 +2,7 @@
 
 
 # datasets
-load(file = "data/egt_gasto_07042018.RData")
+load(file = "data/egt_gasto_2530.RData")
 
 # 01. Gasto turistico total por islas segun paises de residencia ----
 
@@ -19,7 +19,7 @@ gasto01.sidebarpanel <- sidebarPanel(
   selectInput("residencia1", "Países de residencia",
               choices = c(b1.gasto$`Países de residencia` %>%
                             unique() %>% sort() %>% as.vector()),
-              selected = "TOTAL PAÍSES" #, multiple = TRUE
+              selected = "TOTAL PAÍSES" , multiple = TRUE
   ),
   selectInput("isla1", "Islas",
               choices = c(b1.gasto$Islas %>%
