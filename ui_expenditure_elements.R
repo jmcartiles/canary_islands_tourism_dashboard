@@ -79,7 +79,7 @@ gasto.sidebarpanel.2529 <- sidebarPanel(
 
 ## B. mainpanel
 gasto.mainpanel.2529 <- mainPanel(
-  h4("02. Gasto turístico total en Canarias por NUTS1 de residencia", align = "left"),
+  h4("02. Gasto turístico total en Canarias según NUTS1 de residencia", align = "left"),
 
   h1("", align = "left"),
   dygraphOutput("dygraph2529"),
