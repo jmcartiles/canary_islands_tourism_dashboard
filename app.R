@@ -56,6 +56,7 @@ source("authors_elements.R", encoding = "utf-8")
 source("ui_expenditure_elements.R", encoding = "utf-8")
 source("ui_profile_elements.R", encoding = "utf-8")
 source("ui_travelcharacteristics_elements.R", encoding = "utf-8")
+source("server_functions.R", encoding = "utf-8")
 
 
 # user interface
@@ -92,7 +93,6 @@ ui <- fluidPage(
                         perfil01.sidebarpanel,
                         perfil01.mainpanel
                        ))),
-             
              
              navbarMenu("Características del viaje",
              tabPanel("01. Turistas por islas según países de residencia y motivos de la estancia",
@@ -180,20 +180,20 @@ server <- function(input, output) {
    output$df2528 <- DT::renderDataTable({
      df.input.2528()
    })
-   
+
    output$df2529 <- DT::renderDataTable({
      df.input.2529()
    })
-   
+
    output$df1 <- DT::renderDataTable({
      df.input.1()
    })
-   
+
    # profile
    output$df2 <- DT::renderDataTable({
      df.input.2()
    })
-   
+
    # travel characteristics
    output$df3 <- DT::renderDataTable({
      df.input.3()
@@ -208,15 +208,7 @@ server <- function(input, output) {
        reshape(., idvar = "fecha", timevar = "Países de residencia", direction = "wide")
      colnames(data2528) <- gsub("valor.", "", colnames(data2528))
      
-     xts(data2528, as.Date(data2528$fecha, format = "%Y-%m-%d %H:%M:%OS")) %>%
-       dygraph() %>%
-       dyAxis(
-         name = "y",
-         valueFormatter = 'function(d){return d}',
-         axisLabelFormatter = 'function(d){return Math.round(d/1e6) + " mill.(\u20ac)"}'
-       ) %>%
-       dyOptions(fillGraph = TRUE, fillAlpha = 0.1) %>%
-       dyRangeSelector()
+     custom_dygraph(data2528, euros = TRUE)
      
    })
    
@@ -225,15 +217,7 @@ server <- function(input, output) {
        reshape(., idvar = "fecha", timevar = "NUTS1", direction = "wide")
      colnames(data2529) <- gsub("valor.", "", colnames(data2529))
      
-     xts(data2529, as.Date(data2529$fecha, format = "%Y-%m-%d %H:%M:%OS")) %>%
-       dygraph() %>%
-       dyAxis(
-         name = "y",
-         valueFormatter = 'function(d){return d}',
-         axisLabelFormatter = 'function(d){return Math.round(d/1e6) + " mill.(\u20ac)"}'
-       ) %>%
-       dyOptions(fillGraph = TRUE, fillAlpha = 0.1) %>%
-       dyRangeSelector()
+     custom_dygraph(data2529, euros = TRUE)
      
    })
    
@@ -242,15 +226,7 @@ server <- function(input, output) {
        reshape(., idvar = "fecha", timevar = "Países de residencia", direction = "wide")
      colnames(data1) <- gsub("valor.", "", colnames(data1))
      
-     xts(data1, as.Date(data1$fecha, format = "%Y-%m-%d %H:%M:%OS")) %>%
-       dygraph() %>%
-       dyAxis(
-         name = "y",
-         valueFormatter = 'function(d){return d}',
-         axisLabelFormatter = 'function(d){return Math.round(d/1e6) + " mill.(\u20ac)"}'
-       ) %>%
-       dyOptions(fillGraph = TRUE, fillAlpha = 0.1) %>%
-       dyRangeSelector()
+     custom_dygraph(data1, euros = TRUE)
      
    })
    
@@ -260,15 +236,7 @@ server <- function(input, output) {
        reshape(., idvar = "fecha", timevar = "Países de residencia", direction = "wide")
      colnames(data2) <- gsub("valor.", "", colnames(data2))
      
-     xts(data2, as.Date(data2$fecha, format = "%Y-%m-%d %H:%M:%OS")) %>%
-       dygraph() %>%
-       dyAxis(
-         name = "y",
-         valueFormatter = 'function(d){return d}',
-         axisLabelFormatter = 'function(d){return Math.round(d/1e6) + " mill."}'
-       ) %>%
-       dyOptions(fillGraph = TRUE, fillAlpha = 0.1) %>%
-       dyRangeSelector()
+     custom_dygraph(data2, euros = FALSE)
      
    })
    
@@ -278,57 +246,23 @@ server <- function(input, output) {
        reshape(., idvar = "fecha", timevar = "Países de residencia", direction = "wide")
      colnames(data3) <- gsub("valor.", "", colnames(data3))
      
-     xts(data3, as.Date(data3$fecha, format = "%Y-%m-%d %H:%M:%OS")) %>%
-       dygraph() %>%
-       dyAxis(
-         name = "y",
-         valueFormatter = 'function(d){return d}',
-         axisLabelFormatter = 'function(d){return Math.round(d/1e6) + " mill."}'
-       ) %>%
-       dyOptions(fillGraph = TRUE, fillAlpha = 0.1) %>%
-       dyRangeSelector()
+     custom_dygraph(data3, euros = FALSE)
+     
    })
    
    
    # download input dataframes
    
    # expenditure
-   output$download2528 <- downloadHandler(
-     filename = function(){"thename.csv"}, 
-     content = function(fname){
-       write.csv(df.input.2528(), fname)
-     }
-   )
-   
-   output$download2529 <- downloadHandler(
-     filename = function(){"thename.csv"}, 
-     content = function(fname){
-       write.csv(df.input.2529(), fname)
-     }
-   )
-   
-   output$download1 <- downloadHandler(
-     filename = function(){"thename.csv"}, 
-     content = function(fname){
-       write.csv(df.input.1(), fname)
-     }
-   )
-   
+   output$download2528 <- button_download_csv(df.input.2528())
+   output$download2529 <- button_download_csv(df.input.2529())
+   output$download1 <- button_download_csv(df.input.1())
+
    # profile
-   output$download2 <- downloadHandler(
-     filename = function(){"thename.csv"}, 
-     content = function(fname){
-       write.csv(df.input.2(), fname)
-     }
-   )
+   output$download2 <- button_download_csv(df.input.2())
    
    # travel characteristics
-   output$download3 <- downloadHandler(
-     filename = function(){"thename.csv"}, 
-     content = function(fname){
-       write.csv(df.input.3(), fname)
-     }
-   )
+   output$download3 <- button_download_csv(df.input.3())
    
    
 }
