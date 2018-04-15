@@ -32,8 +32,13 @@ caractviaje01.sidebarpanel <- sidebarPanel(
 ## B. mainpanel
 caractviaje01.mainpanel <- mainPanel(
   h4("01. Turistas por islas según países de residencia y motivos de la estancia", align = "left"),
+  
   h1("", align = "left"),
   dygraphOutput("df3graph"),
+  h4("", align = "left"),
+  
+  p(paste0("Fecha de actualización: ", Sys.Date())),
   h1("", align = "left"),
+  
   DT::dataTableOutput("df3")
 )

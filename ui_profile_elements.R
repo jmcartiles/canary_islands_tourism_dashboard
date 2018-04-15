@@ -35,8 +35,13 @@ perfil01.sidebarpanel <- sidebarPanel(
 ## B. mainpanel
 perfil01.mainpanel <- mainPanel(
   h4("01. Turistas por islas según grupos de edad, sexos y países de residencia", align = "left"),
+  
   h1("", align = "left"),
   dygraphOutput("df2graph"),
+  h4("", align = "left"),
+  
+  p(paste0("Fecha de actualización: ", Sys.Date())),
   h1("", align = "left"),
+  
   DT::dataTableOutput("df2")
 )
