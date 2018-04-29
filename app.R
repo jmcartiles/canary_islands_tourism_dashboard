@@ -17,6 +17,7 @@ suppressPackageStartupMessages(library(shinyjs))
 
 
 
+
 # datasets
 # df.gasto.2528 <- suppressWarnings(istac("sec.hos.enc.ser.2528", POSIXct = TRUE)) %>%
 #   mutate(fecha = format(fecha, "%Y-%m-%d %H:%M:%OS"),
@@ -58,6 +59,17 @@ source("ui_profile_elements.R", encoding = "utf-8")
 source("ui_travelcharacteristics_elements.R", encoding = "utf-8")
 source("server_functions.R", encoding = "utf-8")
 
+# load map
+library(rgdal)
+library(leaflet)
+islas<-readOGR(dsn="data/islas_shp/islas.shp")
+tislas <- gSimplify(islas,tol = 10)
+mislas <- as(tislas, "SpatialPolygonsDataFrame")
+mislas@data <- islas@data
+islas <- mislas
+
+islas<-spTransform(islas, CRS("+init=epsg:4326"))
+bounds<-bbox(islas)
 
 # user interface
 ui <- fluidPage(
@@ -84,7 +96,12 @@ ui <- fluidPage(
                         tabPanel("03. Gasto turístico total por islas según países de residencia",
                                  sidebarLayout(
                                    gasto01.sidebarpanel,
-                                   gasto01.mainpanel))
+                                   gasto01.mainpanel)),
+                         tabPanel("04. Mapa gasto turístico total por islas según países de residencia",
+                                  sidebarLayout(
+                                    gasto02.sidebarpanel,
+                                    gasto02.mainpanel))
+                        
                         ),
              
              navbarMenu("Perfil del turista",
@@ -113,6 +130,8 @@ ui <- fluidPage(
 
 # server application
 server <- function(input, output) {
+  
+
   
   # show/hide sidebar panel
   observeEvent(input$showSidebar, {
@@ -265,9 +284,86 @@ server <- function(input, output) {
    output$download3 <- button_download_csv(df.input.3())
    
    
-}
+   # map
 
-# run application 
+     
+     getDataSet<-reactive({
+       
+       # Get a subset of the income data which is contingent on the input variables
+       dataSet<- b1.gasto %>%
+         filter(`Indicadores de gasto` == input$indgastom,
+                `Países de residencia` %in% input$residenciam,
+                Indicadores == input$indicadorm,
+                lubridate::year(fecha) == input$anyom,
+                periodicidad == "Anual",
+                Islas != "CANARIAS") %>%
+         mutate(mislas = tolower(Islas))
+       # Copy our GIS data
+       islas@data<- islas@data %>%
+         mutate(mislas = tolower(isla))
+       
+       joinedDataset <- islas
+       
+       # Join the two datasets together
+       joinedDataset@data <- suppressWarnings(left_join(joinedDataset@data, dataSet, by="mislas"))
+       
+       
+       joinedDataset
+     })
+     
+     # Due to use of leafletProxy below, this should only be called once
+     output$islasMap<-renderLeaflet({
+       
+       leaflet() %>%
+         addProviderTiles(providers$CartoDB.Positron,
+                          options = providerTileOptions(noWrap = TRUE)
+         ) %>%
+         
+         # Centre the map in the middle of our co-ordinates
+         setView(mean(bounds[1,]),
+                 mean(bounds[2,]),
+                 zoom=7 # set to 10 as 9 is a bit too zoomed out
+         )
+       
+       
+       
+       
+       
+     })
+     
+     
+     
+     observe({
+       theData<-getDataSet()
+       
+       # colour palette mapped to data
+       pal <- colorQuantile("YlGn", theData$valor, n = 9)
+       
+       # set text for the clickable popup labels
+       islas_popup <- paste0("<strong>Isla: </strong>",
+                             theData$Islas,
+                             "<br><strong>",
+                             input$indgastom,
+                             ": </strong>",
+                             formatC(theData$valor, format="f", big.mark=',', digits = ifelse(input$indicadorm == "Valor absoluto", 0, 2)),
+                             ifelse(input$indicadorm == "Valor absoluto", " €", "%")
+       )
+       
+       # If the data changes, the polygons are cleared and redrawn, however, the map (above) is not redrawn
+       leafletProxy("islasMap", data = theData) %>%
+         clearShapes() %>%
+         addPolygons(data = theData,
+                     fillColor = pal(theData$valor),
+                     fillOpacity = 0.8,
+                     color = "#BDBDC3",
+                     weight = 2,
+                     popup = islas_popup)
+       
+     })
+
+    }
+# 
+ # run application 
 shinyApp(ui = ui, server = server)
-
-
+# 
+# 
