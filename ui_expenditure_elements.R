@@ -143,8 +143,8 @@ gasto02.sidebarpanel <- sidebarPanel(
                             unique() %>% sort() %>% as.vector()),
               selected = "Gasto total"),
   selectInput("indicadorm", "Indicadores",
-              choices = c(b1.gasto$Indicadores %>%
-                            unique() %>% sort() %>% as.vector()),
+              choices = c(b1.gasto$Indicadores %>% 
+                            unique() %>%  .[!grepl("trim",.)] %>% sort() %>% as.vector()),
               selected = "Valor absoluto"),
   selectInput("residenciam", "Países de residencia",
               choices = c(b1.gasto$`Países de residencia` %>%
