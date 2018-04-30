@@ -13,6 +13,9 @@ suppressPackageStartupMessages(library(dygraphs))
 suppressPackageStartupMessages(library(DT))
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(shinyjs))
+suppressPackageStartupMessages(library(leaflet))
+suppressPackageStartupMessages(library(rgdal))
+suppressPackageStartupMessages(library(rgeos))
 
 
 
@@ -60,8 +63,7 @@ source("ui_travelcharacteristics_elements.R", encoding = "utf-8")
 source("server_functions.R", encoding = "utf-8")
 
 # load map
-library(rgdal)
-library(leaflet)
+
 islas<-readOGR(dsn="data/islas_shp/islas.shp")
 tislas <- gSimplify(islas,tol = 10)
 mislas <- as(tislas, "SpatialPolygonsDataFrame")
@@ -291,13 +293,14 @@ server <- function(input, output) {
        
        # Get a subset of the income data which is contingent on the input variables
        dataSet<- b1.gasto %>%
-         filter(`Indicadores de gasto` == input$indgastom,
-                `Países de residencia` %in% input$residenciam,
-                Indicadores == input$indicadorm,
+         setNames(c("indicadoresgasto","paises","islas","indicadores","periodos","valor","fecha","periodicidad")) %>%
+         filter(indicadoresgasto == input$indgastom,
+                paises %in% input$residenciam,
+                indicadores == input$indicadorm,
                 lubridate::year(fecha) == input$anyom,
                 periodicidad == "Anual",
-                Islas != "CANARIAS") %>%
-         mutate(mislas = tolower(Islas))
+                islas != "CANARIAS") %>%
+         mutate(mislas = tolower(islas))
        # Copy our GIS data
        islas@data<- islas@data %>%
          mutate(mislas = tolower(isla))
@@ -341,7 +344,7 @@ server <- function(input, output) {
        
        # set text for the clickable popup labels
        islas_popup <- paste0("<strong>Isla: </strong>",
-                             theData$Islas,
+                             theData$islas,
                              "<br><strong>",
                              input$indgastom,
                              ": </strong>",
