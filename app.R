@@ -240,6 +240,11 @@ server <- function(input, output) {
        reshape(., idvar = "fecha", timevar = "Países de residencia", direction = "wide")
      colnames(data1) <- gsub("valor.", "", colnames(data1))
      
+       # nums <- unlist(lapply(data1, is.numeric))
+       # min.value <- min(data1[,nums]) - 10
+       # max.value <- max(data1[,nums]) + 10
+       # per.axis.range.1 <- c(min.value, max.value)
+     
      # change in axis labels when data is in %
      if (any(grepl("Variación", df.input.1()$Indicadores) == TRUE)) {
        is.variation.1 <- TRUE
