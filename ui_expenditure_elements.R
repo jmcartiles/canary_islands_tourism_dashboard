@@ -37,10 +37,10 @@ gasto.sidebarpanel.2528 <- div(id = "Sidebar",
 gasto.mainpanel.2528 <- mainPanel(
   h4("01. Gasto turístico total en Canarias según países de residencia", align = "left"),
   
-  p(
-  actionButton("showSidebar", "Mostrar filtros"),
-  actionButton("hideSidebar", "Ocultar filtros"),
-  align = "right"),
+  # p(
+  # actionButton("showSidebar", "Mostrar filtros"),
+  # actionButton("hideSidebar", "Ocultar filtros"),
+  # align = "right"),
   
   h1("", align = "left"),
   dygraphOutput("dygraph2528"),

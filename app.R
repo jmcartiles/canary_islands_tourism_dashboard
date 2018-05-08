@@ -208,7 +208,14 @@ server <- function(input, output) {
        reshape(., idvar = "fecha", timevar = "Países de residencia", direction = "wide")
      colnames(data2528) <- gsub("valor.", "", colnames(data2528))
      
-     custom_dygraph(data2528, euros = TRUE)
+     # change in axis labels when data is in %
+     if (any(grepl("Variación", df.input.2528()$Indicadores) == TRUE)) {
+       is.variation.2528 <- TRUE
+     } else {
+       is.variation.2528 <- FALSE
+     }
+     
+     custom_dygraph(data2528, euros = TRUE, is.variation = is.variation.2528)
      
    })
    
@@ -217,7 +224,14 @@ server <- function(input, output) {
        reshape(., idvar = "fecha", timevar = "NUTS1", direction = "wide")
      colnames(data2529) <- gsub("valor.", "", colnames(data2529))
      
-     custom_dygraph(data2529, euros = TRUE)
+     # change in axis labels when data is in %
+     if (any(grepl("Variación", df.input.2529()$Indicadores) == TRUE)) {
+       is.variation.2529 <- TRUE
+     } else {
+       is.variation.2529 <- FALSE
+     }
+     
+     custom_dygraph(data2529, euros = TRUE, is.variation = is.variation.2529)
      
    })
    
@@ -226,7 +240,19 @@ server <- function(input, output) {
        reshape(., idvar = "fecha", timevar = "Países de residencia", direction = "wide")
      colnames(data1) <- gsub("valor.", "", colnames(data1))
      
-     custom_dygraph(data1, euros = TRUE)
+       # nums <- unlist(lapply(data1, is.numeric))
+       # min.value <- min(data1[,nums]) - 10
+       # max.value <- max(data1[,nums]) + 10
+       # per.axis.range.1 <- c(min.value, max.value)
+     
+     # change in axis labels when data is in %
+     if (any(grepl("Variación", df.input.1()$Indicadores) == TRUE)) {
+       is.variation.1 <- TRUE
+     } else {
+       is.variation.1 <- FALSE
+     }
+     
+     custom_dygraph(data1, euros = TRUE, is.variation = is.variation.1)
      
    })
    
