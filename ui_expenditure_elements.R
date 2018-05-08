@@ -147,15 +147,13 @@ gasto02.sidebarpanel <- sidebarPanel(
                             unique() %>%  .[!grepl("trim",.)] %>% sort() %>% as.vector()),
               selected = "Valor absoluto"),
   selectInput("residenciam", "Países de residencia",
-              choices = c(b1.gasto$`Países de residencia` %>%
+              choices = c(b1.gasto[["Países de residencia"]] %>%
                             unique() %>% sort() %>% as.vector()),
-              selected = "TOTAL PAÍSES" , multiple = FALSE
-  ),
+              selected = "TOTAL PAÍSES"),
   selectInput("anyom", "Año",
               choices = c(b1.gasto$fecha %>% lubridate::year() %>%
                             unique() %>% sort() %>% as.vector()),
-              selected = "2017"),
-  downloadButton('downloadm',"Descargar datos (csv)")
+              selected = "2017")
 )
 
 
