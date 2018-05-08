@@ -16,6 +16,7 @@ suppressPackageStartupMessages(library(shinyjs))
 suppressPackageStartupMessages(library(leaflet))
 suppressPackageStartupMessages(library(rgdal))
 suppressPackageStartupMessages(library(rgeos))
+suppressPackageStartupMessages(library(lubridate))
 
 
 
@@ -64,11 +65,8 @@ source("server_functions.R", encoding = "utf-8")
 
 # load map
 
-islas<-readOGR(dsn="data/islas_shp/islas.shp")
-tislas <- gSimplify(islas,tol = 10)
-mislas <- as(tislas, "SpatialPolygonsDataFrame")
-mislas@data <- islas@data
-islas <- mislas
+
+islas<-readOGR(dsn="data/islas_shp/islas_suav.shp", encodin = "UTF-8")
 
 islas<-spTransform(islas, CRS("+init=epsg:4326"))
 bounds<-bbox(islas)
@@ -297,7 +295,7 @@ server <- function(input, output) {
          filter(indicadoresgasto == input$indgastom,
                 paises %in% input$residenciam,
                 indicadores == input$indicadorm,
-                lubridate::year(fecha) == input$anyom,
+                year(fecha) == input$anyom,
                 periodicidad == "Anual",
                 islas != "CANARIAS") %>%
          mutate(mislas = tolower(islas))
@@ -309,7 +307,7 @@ server <- function(input, output) {
        
        # Join the two datasets together
        joinedDataset@data <- suppressWarnings(left_join(joinedDataset@data, dataSet, by="mislas"))
-       
+       #joinedDataset@data <- suppressWarnings(sp::merge(joinedDataset@data, dataSet, by="mislas",all.x = TRUE))
        
        joinedDataset
      })
