@@ -133,3 +133,40 @@ gasto01.mainpanel <- mainPanel(
   
   DT::dataTableOutput("df1")
 )
+
+# 04. Mapa gasto turistico total por islas segun paises de residencia ----
+
+## A. sidebarpanel
+gasto02.sidebarpanel <- sidebarPanel(
+  selectInput("indgastom", "Indicadores de gasto",
+              choices = c(b1.gasto$`Indicadores de gasto` %>%
+                            unique() %>% sort() %>% as.vector()),
+              selected = "Gasto total"),
+  selectInput("indicadorm", "Indicadores",
+              choices = c(b1.gasto$Indicadores %>% 
+                            unique() %>%  .[!grepl("trim",.)] %>% sort() %>% as.vector()),
+              selected = "Valor absoluto"),
+  selectInput("residenciam", "Países de residencia",
+              choices = c(b1.gasto[["Países de residencia"]] %>%
+                            unique() %>% sort() %>% as.vector()),
+              selected = "TOTAL PAÍSES"),
+  selectInput("anyom", "Año",
+              choices = c(b1.gasto$fecha %>% lubridate::year() %>%
+                            unique() %>% sort() %>% as.vector()),
+              selected = "2017")
+)
+
+
+## B. mainpanel
+gasto02.mainpanel <- mainPanel(
+  h4("04. Gasto turístico total por islas según países de residencia", align = "left"),
+  
+  h1("", align = "left"),
+  leafletOutput("islasMap", height=400),
+  h4("", align = "left"),
+  
+  p(paste0("Fecha de actualización: ", Sys.Date())),
+  h1("", align = "left")
+  
+  
+)
