@@ -88,19 +88,19 @@ ui <- fluidPage(
                       description.mainpanel),
              
              navbarMenu("Gasto turístico",
-                        tabPanel("01. Gasto turístico total en Canarias según países de residencia",
+                        tabPanel(icon = icon("line-chart"),"01. Gasto turístico total en Canarias según países de residencia",
                                  sidebarLayout(
                                    gasto.sidebarpanel.2528,
                                    gasto.mainpanel.2528)),
-                        tabPanel("02. Gasto turístico total en Canarias según NUTS1 de residencia",
+                        tabPanel(icon = icon("line-chart"),"02. Gasto turístico total en Canarias según NUTS1 de residencia",
                                  sidebarLayout(
                                    gasto.sidebarpanel.2529,
                                    gasto.mainpanel.2529)),
-                        tabPanel("03. Gasto turístico total por islas según países de residencia",
+                        tabPanel(icon = icon("line-chart"),"03. Gasto turístico total por islas según países de residencia",
                                  sidebarLayout(
                                    gasto01.sidebarpanel,
                                    gasto01.mainpanel)),
-                         tabPanel("04. Mapa gasto turístico total por islas según países de residencia",
+                         tabPanel(icon = icon("globe"), "04. Mapa gasto turístico total por islas según países de residencia",
                                   sidebarLayout(
                                     gasto02.sidebarpanel,
                                     gasto02.mainpanel))
@@ -108,14 +108,14 @@ ui <- fluidPage(
                         ),
              
              navbarMenu("Perfil del turista",
-             tabPanel("01. Turistas por islas según grupos de edad, sexos y países de residencia",
+             tabPanel(icon = icon("fa-chart-line"),"01. Turistas por islas según grupos de edad, sexos y países de residencia",
                       sidebarLayout(
                         perfil01.sidebarpanel,
                         perfil01.mainpanel
                        ))),
              
              navbarMenu("Características del viaje",
-             tabPanel("01. Turistas por islas según países de residencia y motivos de la estancia",
+             tabPanel(icon = icon("fa-chart-line"),"01. Turistas por islas según países de residencia y motivos de la estancia",
                       sidebarLayout(
                         caractviaje01.sidebarpanel,
                         caractviaje01.mainpanel
