@@ -5,9 +5,9 @@ account: aramaki2501
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 333798
-bundleId: 1362997
+bundleId: 1365171
 url: https://aramaki2501.shinyapps.io/canary_islands_tourism_dashboard/
-when: 1525799889.39141
+when: 1525887638.04065
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: islas.R
