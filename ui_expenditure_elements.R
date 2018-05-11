@@ -2,9 +2,9 @@
 
 
 # datasets
-load(file = "data/egt_gasto_2528.RData")
-load(file = "data/egt_gasto_2529.RData")
-load(file = "data/egt_gasto_2530.RData")
+ load(file = "data/egt_gasto_2528.RData")
+ load(file = "data/egt_gasto_2529.RData")
+ load(file = "data/egt_gasto_2530.RData")
 
 # 01. Gasto turistico total en Canarias según países de residencia ----
 
@@ -12,15 +12,15 @@ load(file = "data/egt_gasto_2530.RData")
 gasto.sidebarpanel.2528 <- div(id = "Sidebar",
                                sidebarPanel(
                                  selectInput("indgasto2528", "Indicadores de gasto",
-                                             choices = c(df.gasto.2528$`Indicadores de gasto` %>%
+                                             choices = c(df.gasto.2528$indicadoresgasto %>%
                                                            unique() %>% sort() %>% as.vector()),
                                              selected = "Gasto total"),
                                  selectInput("indicador2528", "Indicadores",
-                                             choices = c(df.gasto.2528$Indicadores %>%
+                                             choices = c(df.gasto.2528$indicadores %>%
                                                            unique() %>% sort() %>% as.vector()),
                                              selected = "Valor absoluto"),
                                  selectInput("residencia2528", "Países de residencia",
-                                             choices = c(df.gasto.2528$`Países de residencia` %>%
+                                             choices = c(df.gasto.2528$paisesresidencia %>%
                                                            unique() %>% sort() %>% as.vector()),
                                              selected = "TOTAL PAÍSES" , multiple = TRUE
                                              ),
@@ -57,11 +57,11 @@ gasto.mainpanel.2528 <- mainPanel(
 ## A. sidebarpanel
 gasto.sidebarpanel.2529 <- sidebarPanel(
   selectInput("indgasto2529", "Indicadores de gasto",
-              choices = c(df.gasto.2529$`Indicadores de gasto` %>%
+              choices = c(df.gasto.2529$indicadoresgasto %>%
                             unique() %>% sort() %>% as.vector()),
               selected = "Gasto total"),
   selectInput("indicador2529", "Indicadores",
-              choices = c(df.gasto.2529$Indicadores %>%
+              choices = c(df.gasto.2529$indicadores %>%
                             unique() %>% sort() %>% as.vector()),
               selected = "Valor absoluto"),
   selectInput("nuts12529", "NUTS1",
@@ -96,20 +96,19 @@ gasto.mainpanel.2529 <- mainPanel(
 ## A. sidebarpanel
 gasto01.sidebarpanel <- sidebarPanel(
   selectInput("indgasto1", "Indicadores de gasto",
-              choices = c(b1.gasto$`Indicadores de gasto` %>%
+              choices = c(b1.gasto$indicadoresgasto %>%
                             unique() %>% sort() %>% as.vector()),
               selected = "Gasto total"),
   selectInput("indicador1", "Indicadores",
-              choices = c(b1.gasto$Indicadores %>%
+              choices = c(b1.gasto$indicadores %>%
                             unique() %>% sort() %>% as.vector()),
               selected = "Valor absoluto"),
   selectInput("residencia1", "Países de residencia",
-              choices = c(b1.gasto$`Países de residencia` %>%
+              choices = c(b1.gasto$paisesresidencia %>%
                             unique() %>% sort() %>% as.vector()),
-              selected = "TOTAL PAÍSES" , multiple = TRUE
-  ),
+              selected = "TOTAL PAÍSES"),
   selectInput("isla1", "Islas",
-              choices = c(b1.gasto$Islas %>%
+              choices = c(b1.gasto$islas %>%
                             unique() %>% sort() %>% as.vector()),
               selected = "CANARIAS"),
   selectInput("period1", "Periodicidad",
@@ -132,4 +131,41 @@ gasto01.mainpanel <- mainPanel(
   h1("", align = "left"),
   
   DT::dataTableOutput("df1")
+)
+
+# 04. Mapa gasto turistico total por islas segun paises de residencia ----
+
+## A. sidebarpanel
+gasto02.sidebarpanel <- sidebarPanel(
+  selectInput("indgastom", "Indicadores de gasto",
+              choices = c(b1.gasto$indicadoresgasto %>%
+                            unique() %>% sort() %>% as.vector()),
+              selected = "Gasto total"),
+  selectInput("indicadorm", "Indicadores",
+              choices = c(b1.gasto$indicadores %>% 
+                            unique() %>%  .[!grepl("trim",.)] %>% sort() %>% as.vector()),
+              selected = "Valor absoluto"),
+  selectInput("residenciam", "Países de residencia",
+              choices = c(b1.gasto$paisesresidencia %>%
+                            unique() %>% sort() %>% as.vector()),
+              selected = "TOTAL PAÍSES"),
+  selectInput("anyom", "Año",
+              choices = c(b1.gasto$fecha %>% lubridate::year() %>%
+                            unique() %>% sort() %>% as.vector()),
+              selected = "2017")
+)
+
+
+## B. mainpanel
+gasto02.mainpanel <- mainPanel(
+  h4("04. Gasto turístico total por islas según países de residencia", align = "left"),
+  
+  h1("", align = "left"),
+  leafletOutput("islasMap", height=400),
+  h4("", align = "left"),
+  
+  p(paste0("Fecha de actualización: ", Sys.Date())),
+  h1("", align = "left")
+  
+  
 )

@@ -10,15 +10,15 @@ load(file = "data/egt_motivo_2646.RData")
 ## A. sidebarpanel
 caractviaje01.sidebarpanel <- sidebarPanel(
     selectInput("residencia3", "Países de residencia",
-                choices = c(b3.motivos$`Países de residencia` %>%
+                choices = c(b3.motivos$paisesresidencia %>%
                               unique() %>% sort() %>% as.vector()),
                 selected = "TOTAL PAÍSES", multiple = TRUE),
     selectInput("isla3", "Islas",
-                choices = c(b3.motivos$Islas %>%
+                choices = c(b3.motivos$islas %>%
                               unique() %>% sort() %>% as.vector()),
                 selected = "CANARIAS"),
     selectInput("motivo3", "Motivos de la estancia",
-                choices = c(b3.motivos$`Motivos de la estancia`
+                choices = c(b3.motivos$motivos
                             %>% unique() %>% sort() %>% as.vector()),
                 selected = "TOTAL"),
     selectInput("period3", "Periodicidad",

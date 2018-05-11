@@ -13,6 +13,11 @@ suppressPackageStartupMessages(library(dygraphs))
 suppressPackageStartupMessages(library(DT))
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(shinyjs))
+suppressPackageStartupMessages(library(leaflet))
+suppressPackageStartupMessages(library(rgdal))
+suppressPackageStartupMessages(library(rgeos))
+suppressPackageStartupMessages(library(lubridate))
+
 
 
 
@@ -50,6 +55,9 @@ load(file = "data/egt_perfil_2597.RData")
 load(file = "data/egt_motivo_2646.RData")
 
 
+
+
+
 # elements
 source("description_elements.R", encoding = "utf-8")
 source("authors_elements.R", encoding = "utf-8")
@@ -58,6 +66,13 @@ source("ui_profile_elements.R", encoding = "utf-8")
 source("ui_travelcharacteristics_elements.R", encoding = "utf-8")
 source("server_functions.R", encoding = "utf-8")
 
+# load map
+
+
+islas<-readOGR(dsn="data/islas_shp/islas_suav.shp", encodin = "UTF-8")
+
+islas<-spTransform(islas, CRS("+init=epsg:4326"))
+bounds<-bbox(islas)
 
 # user interface
 ui <- fluidPage(
@@ -73,29 +88,34 @@ ui <- fluidPage(
                       description.mainpanel),
              
              navbarMenu("Gasto turístico",
-                        tabPanel("01. Gasto turístico total en Canarias según países de residencia",
+                        tabPanel(icon = icon("line-chart"),"01. Gasto turístico total en Canarias según países de residencia",
                                  sidebarLayout(
                                    gasto.sidebarpanel.2528,
                                    gasto.mainpanel.2528)),
-                        tabPanel("02. Gasto turístico total en Canarias según NUTS1 de residencia",
+                        tabPanel(icon = icon("line-chart"),"02. Gasto turístico total en Canarias según NUTS1 de residencia",
                                  sidebarLayout(
                                    gasto.sidebarpanel.2529,
                                    gasto.mainpanel.2529)),
-                        tabPanel("03. Gasto turístico total por islas según países de residencia",
+                        tabPanel(icon = icon("line-chart"),"03. Gasto turístico total por islas según países de residencia",
                                  sidebarLayout(
                                    gasto01.sidebarpanel,
-                                   gasto01.mainpanel))
+                                   gasto01.mainpanel)),
+                         tabPanel(icon = icon("globe"), "04. Mapa gasto turístico total por islas según países de residencia",
+                                  sidebarLayout(
+                                    gasto02.sidebarpanel,
+                                    gasto02.mainpanel))
+                        
                         ),
              
              navbarMenu("Perfil del turista",
-             tabPanel("01. Turistas por islas según grupos de edad, sexos y países de residencia",
+             tabPanel(icon = icon("fa-chart-line"),"01. Turistas por islas según grupos de edad, sexos y países de residencia",
                       sidebarLayout(
                         perfil01.sidebarpanel,
                         perfil01.mainpanel
                        ))),
              
              navbarMenu("Características del viaje",
-             tabPanel("01. Turistas por islas según países de residencia y motivos de la estancia",
+             tabPanel(icon = icon("fa-chart-line"),"01. Turistas por islas según países de residencia y motivos de la estancia",
                       sidebarLayout(
                         caractviaje01.sidebarpanel,
                         caractviaje01.mainpanel
@@ -114,6 +134,8 @@ ui <- fluidPage(
 # server application
 server <- function(input, output) {
   
+
+  
   # show/hide sidebar panel
   observeEvent(input$showSidebar, {
     shinyjs::show(id = "Sidebar")
@@ -126,50 +148,50 @@ server <- function(input, output) {
   # expenditure
   df.input.2528 <- reactive({
     data2528 <- df.gasto.2528 %>%
-      filter(`Indicadores de gasto` == input$indgasto2528,
-             `Países de residencia` %in% input$residencia2528,
-             Indicadores == input$indicador2528,
+      filter(indicadoresgasto == input$indgasto2528,
+             paisesresidencia %in% input$residencia2528,
+             indicadores == input$indicador2528,
              periodicidad == input$period2528)
     return(data2528)
   })
   
   df.input.2529 <- reactive({
     data2529 <- df.gasto.2529 %>%
-      filter(`Indicadores de gasto` == input$indgasto2529,
+      filter(indicadoresgasto == input$indgasto2529,
              NUTS1 %in% input$nuts12529,
-             Indicadores == input$indicador2529,
+             indicadores == input$indicador2529,
              periodicidad == input$period2529)
     return(data2529)
   })
   
   df.input.1 <- reactive({
     data1 <- b1.gasto %>%
-      filter(`Indicadores de gasto` == input$indgasto1,
-             `Países de residencia` %in% input$residencia1,
-             Indicadores == input$indicador1,
+      filter(indicadoresgasto == input$indgasto1,
+             paisesresidencia %in% input$residencia1,
+             indicadores == input$indicador1,
              periodicidad == input$period1,
-             Islas %in% input$isla1)
+             islas %in% input$isla1)
     return(data1)
   })
   
   # profile
   df.input.2 <- reactive({
     data2 <- b2.perfil %>%
-      filter(Edades == input$edad2,
-             `Países de residencia` %in% input$residencia2,
-             Sexos == input$sexo2,
+      filter(edades == input$edad2,
+             paisesresidencia %in% input$residencia2,
+             sexos == input$sexo2,
              periodicidad == input$period2,
-             Islas == input$isla2)
+             islas == input$isla2)
     return(data2)
   })
    
   # travel characteristics
    df.input.3 <- reactive({
      data3 <- b3.motivos %>%
-       filter(`Países de residencia` %in% input$residencia3,
-              `Motivos de la estancia` == input$motivo3,
+       filter(paisesresidencia %in% input$residencia3,
+              motivos == input$motivo3,
               periodicidad == input$period3,
-              Islas == input$isla3)
+              islas == input$isla3)
      return(data3)
    })
    
@@ -204,8 +226,8 @@ server <- function(input, output) {
    
    # expenditure
    output$dygraph2528 <- renderDygraph({
-     data2528 <- df.input.2528()[,c("Países de residencia", "fecha", "valor")] %>%
-       reshape(., idvar = "fecha", timevar = "Países de residencia", direction = "wide")
+     data2528 <- df.input.2528()[,c("paisesresidencia", "fecha", "valor")] %>%
+       reshape(., idvar = "fecha", timevar = "paisesresidencia", direction = "wide")
      colnames(data2528) <- gsub("valor.", "", colnames(data2528))
      
      # change in axis labels when data is in %
@@ -236,8 +258,8 @@ server <- function(input, output) {
    })
    
    output$df1graph <- renderDygraph({
-     data1 <- df.input.1()[,c("Países de residencia", "fecha", "valor")] %>%
-       reshape(., idvar = "fecha", timevar = "Países de residencia", direction = "wide")
+     data1 <- df.input.1()[,c("paisesresidencia", "fecha", "valor")] %>%
+       reshape(., idvar = "fecha", timevar = "paisesresidencia", direction = "wide")
      colnames(data1) <- gsub("valor.", "", colnames(data1))
      
        # nums <- unlist(lapply(data1, is.numeric))
@@ -258,8 +280,8 @@ server <- function(input, output) {
    
    # profile
    output$df2graph <- renderDygraph({
-     data2 <- df.input.2()[,c("Países de residencia", "fecha", "valor")] %>%
-       reshape(., idvar = "fecha", timevar = "Países de residencia", direction = "wide")
+     data2 <- df.input.2()[,c("paisesresidencia", "fecha", "valor")] %>%
+       reshape(., idvar = "fecha", timevar = "paisesresidencia", direction = "wide")
      colnames(data2) <- gsub("valor.", "", colnames(data2))
      
      custom_dygraph(data2, euros = FALSE)
@@ -268,8 +290,8 @@ server <- function(input, output) {
    
    # travel characteristics
    output$df3graph <- renderDygraph({
-     data3 <- df.input.3()[,c("Países de residencia", "fecha", "valor")] %>%
-       reshape(., idvar = "fecha", timevar = "Países de residencia", direction = "wide")
+     data3 <- df.input.3()[,c("paisesresidencia", "fecha", "valor")] %>%
+       reshape(., idvar = "fecha", timevar = "paisesresidencia", direction = "wide")
      colnames(data3) <- gsub("valor.", "", colnames(data3))
      
      custom_dygraph(data3, euros = FALSE)
@@ -291,9 +313,86 @@ server <- function(input, output) {
    output$download3 <- button_download_csv(df.input.3())
    
    
-}
+   # map
 
-# run application 
+     
+     getDataSet<-reactive({
+       
+       # Get a subset of the income data which is contingent on the input variables
+       dataSet<- b1.gasto %>%
+         filter(indicadoresgasto == input$indgastom,
+                paisesresidencia %in% input$residenciam,
+                indicadores == input$indicadorm,
+                year(fecha) == input$anyom,
+                periodicidad == "Anual",
+                islas != "CANARIAS") %>%
+         mutate(mislas = tolower(islas))
+       # Copy our GIS data
+       islas@data<- islas@data %>%
+         mutate(mislas = tolower(isla))
+       
+       joinedDataset <- islas
+       
+       # Join the two datasets together
+       joinedDataset@data <- suppressWarnings(left_join(joinedDataset@data, dataSet, by="mislas"))
+       #joinedDataset@data <- suppressWarnings(sp::merge(joinedDataset@data, dataSet, by="mislas",all.x = TRUE))
+       
+       joinedDataset
+     })
+     
+     # Due to use of leafletProxy below, this should only be called once
+     output$islasMap<-renderLeaflet({
+       
+       leaflet() %>%
+         addProviderTiles(providers$CartoDB.Positron,
+                          options = providerTileOptions(noWrap = TRUE)
+         ) %>%
+         
+         # Centre the map in the middle of our co-ordinates
+         setView(mean(bounds[1,]),
+                 mean(bounds[2,]),
+                 zoom=7 # set to 10 as 9 is a bit too zoomed out
+         )
+       
+       
+       
+       
+       
+     })
+     
+     
+     
+     observe({
+       theData<-getDataSet()
+       
+       # colour palette mapped to data
+       pal <- colorQuantile("YlGn", theData$valor, n = 9)
+       
+       # set text for the clickable popup labels
+       islas_popup <- paste0("<strong>Isla: </strong>",
+                             theData$islas,
+                             "<br><strong>",
+                             input$indgastom,
+                             ": </strong>",
+                             formatC(theData$valor, format="f", big.mark=',', digits = ifelse(input$indicadorm == "Valor absoluto", 0, 2)),
+                             ifelse(input$indicadorm == "Valor absoluto", " €", "%")
+       )
+       
+       # If the data changes, the polygons are cleared and redrawn, however, the map (above) is not redrawn
+       leafletProxy("islasMap", data = theData) %>%
+         clearShapes() %>%
+         addPolygons(data = theData,
+                     fillColor = pal(theData$valor),
+                     fillOpacity = 0.8,
+                     color = "#BDBDC3",
+                     weight = 2,
+                     popup = islas_popup)
+       
+     })
+
+    }
+# 
+ # run application 
 shinyApp(ui = ui, server = server)
-
-
+# 
+# 
