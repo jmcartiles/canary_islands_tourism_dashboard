@@ -17,6 +17,7 @@ suppressPackageStartupMessages(library(leaflet))
 suppressPackageStartupMessages(library(rgdal))
 suppressPackageStartupMessages(library(rgeos))
 suppressPackageStartupMessages(library(lubridate))
+suppressPackageStartupMessages(library(stringr))
 
 
 
@@ -200,25 +201,25 @@ server <- function(input, output) {
    
    # expenditure
    output$df2528 <- DT::renderDataTable({
-     df.input.2528()
+     df.input.2528() %>% setNames(c("Indicadores de gasto","Países de residencia","Indicadores","Periodos","Valor","Fecha","Periodicidad"))
    })
 
    output$df2529 <- DT::renderDataTable({
-     df.input.2529()
+     df.input.2529() %>% setNames(c("Indicadores de gasto","NUTS1","Indicadores","Periodos","Valor","Fecha","Periodicidad"))
    })
 
    output$df1 <- DT::renderDataTable({
-     df.input.1()
+     df.input.1() %>% setNames(c("Indicadores de gasto","Países de residencia","Islas","Indicadores","Periodos","Valor","Fecha","Periodicidad"))
    })
 
    # profile
    output$df2 <- DT::renderDataTable({
-     df.input.2()
+     df.input.2() %>% setNames(c("Edades","Sexos","Países de residencia","Islas","Periodos","Valor","Fecha","Periodicidad"))
    })
 
    # travel characteristics
    output$df3 <- DT::renderDataTable({
-     df.input.3()
+     df.input.3() %>% setNames(c("Motivos","Países de residencia","Islas","Periodos","Valor","Fecha","Periodicidad"))
    })
    
    
@@ -231,7 +232,7 @@ server <- function(input, output) {
      colnames(data2528) <- gsub("valor.", "", colnames(data2528))
      
      # change in axis labels when data is in %
-     if (any(grepl("Variación", df.input.2528()$Indicadores) == TRUE)) {
+     if (any(grepl("Variación", df.input.2528()$indicadores) == TRUE)) {
        is.variation.2528 <- TRUE
      } else {
        is.variation.2528 <- FALSE
@@ -247,7 +248,7 @@ server <- function(input, output) {
      colnames(data2529) <- gsub("valor.", "", colnames(data2529))
      
      # change in axis labels when data is in %
-     if (any(grepl("Variación", df.input.2529()$Indicadores) == TRUE)) {
+     if (any(grepl("Variación", df.input.2529()$indicadores) == TRUE)) {
        is.variation.2529 <- TRUE
      } else {
        is.variation.2529 <- FALSE
@@ -268,7 +269,7 @@ server <- function(input, output) {
        # per.axis.range.1 <- c(min.value, max.value)
      
      # change in axis labels when data is in %
-     if (any(grepl("Variación", df.input.1()$Indicadores) == TRUE)) {
+     if (any(grepl("Variación", df.input.1()$indicadores) == TRUE)) {
        is.variation.1 <- TRUE
      } else {
        is.variation.1 <- FALSE
@@ -343,6 +344,7 @@ server <- function(input, output) {
      # Due to use of leafletProxy below, this should only be called once
      output$islasMap<-renderLeaflet({
        
+     
        leaflet() %>%
          addProviderTiles(providers$CartoDB.Positron,
                           options = providerTileOptions(noWrap = TRUE)
@@ -352,11 +354,9 @@ server <- function(input, output) {
          setView(mean(bounds[1,]),
                  mean(bounds[2,]),
                  zoom=7 # set to 10 as 9 is a bit too zoomed out
-         )
+         ) 
        
-       
-       
-       
+  
        
      })
      
@@ -370,12 +370,12 @@ server <- function(input, output) {
        
        # set text for the clickable popup labels
        islas_popup <- paste0("<strong>Isla: </strong>",
-                             theData$islas,
+                             str_to_title(theData@data$mislas),
                              "<br><strong>",
                              input$indgastom,
                              ": </strong>",
-                             formatC(theData$valor, format="f", big.mark=',', digits = ifelse(input$indicadorm == "Valor absoluto", 0, 2)),
-                             ifelse(input$indicadorm == "Valor absoluto", " €", "%")
+                             ifelse(is.na(theData$valor),"No disponible",formatC(theData$valor, format="f", big.mark=',', digits = ifelse(input$indicadorm == "Valor absoluto", 0, 2))),
+                             ifelse(is.na(theData$valor),"",ifelse(input$indicadorm == "Valor absoluto", " €", "%"))
        )
        
        # If the data changes, the polygons are cleared and redrawn, however, the map (above) is not redrawn
