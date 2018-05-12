@@ -200,25 +200,25 @@ server <- function(input, output) {
    
    # expenditure
    output$df2528 <- DT::renderDataTable({
-     df.input.2528()
+     df.input.2528() %>% setNames(c("Indicadores de gasto","Países de residencia","Indicadores","Periodos","Valor","Fecha","Periodicidad"))
    })
 
    output$df2529 <- DT::renderDataTable({
-     df.input.2529()
+     df.input.2529() %>% setNames(c("Indicadores de gasto","NUTS1","Indicadores","Periodos","Valor","Fecha","Periodicidad"))
    })
 
    output$df1 <- DT::renderDataTable({
-     df.input.1()
+     df.input.1() %>% setNames(c("Indicadores de gasto","Países de residencia","Islas","Indicadores","Periodos","Valor","Fecha","Periodicidad"))
    })
 
    # profile
    output$df2 <- DT::renderDataTable({
-     df.input.2()
+     df.input.2() %>% setNames(c("Edades","Sexos","Países de residencia","Islas","Periodos","Valor","Fecha","Periodicidad"))
    })
 
    # travel characteristics
    output$df3 <- DT::renderDataTable({
-     df.input.3()
+     df.input.3() %>% setNames(c("Motivos","Países de residencia","Islas","Periodos","Valor","Fecha","Periodicidad"))
    })
    
    
