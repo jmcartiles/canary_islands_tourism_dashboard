@@ -5,6 +5,8 @@
 load(file = "data/egt_perfil_2597.RData")
 load(file = "data/egt_perfil_2587.RData")
 load(file = "data/egt_perfil_2588.RData")
+load(file = "data/egt_perfil_2589.RData")
+
 
 # 01. Turistas por islas segUn grupos de edad, sexos y paIses de residencia ----
 
@@ -49,7 +51,7 @@ perfil01.mainpanel <- mainPanel(
 )
 
 
-# 01. Turistas segun sexos por NUTS1 de residencia ----
+# 02. Turistas segun sexos por NUTS1 de residencia ----
 
 ## A. sidebarpanel
 perfil.sidebarpanel.2587 <- sidebarPanel(
@@ -83,7 +85,7 @@ perfil.mainpanel.2587 <- mainPanel(
   DT::dataTableOutput("df2587")
 )
 
-# 01. Turistas segun grupo de edad por NUTS1 de residencia ----
+# 03. Turistas segun grupo de edad por NUTS1 de residencia ----
 
 ## A. sidebarpanel
 perfil.sidebarpanel.2588 <- sidebarPanel(
@@ -105,7 +107,7 @@ perfil.sidebarpanel.2588 <- sidebarPanel(
 
 ## B. mainpanel
 perfil.mainpanel.2588 <- mainPanel(
-  h4("03. Turistas según grupo de edad por NUTS1 de residencia", align = "left"),
+  h4("03. Turistas según grupos de edad por NUTS1 de residencia", align = "left"),
   
   h1("", align = "left"),
   dygraphOutput("dygraph2588"),
@@ -115,4 +117,42 @@ perfil.mainpanel.2588 <- mainPanel(
   h1("", align = "left"),
   
   DT::dataTableOutput("df2588")
+)
+
+# 04. Turistas segun grupos de edad y sexos por tipos de alojamiento ----
+
+## A. sidebarpanel
+perfil.sidebarpanel.2589 <- sidebarPanel(
+  selectInput("edad2589", "Edades",
+              choices = c(df.perfil.2589$Edades %>%
+                            unique() %>% sort() %>% as.vector()),
+              selected = "TOTAL GRUPOS DE EDADES"),
+  selectInput("sexo2589", "Sexos",
+              choices = c(df.perfil.2589$Sexos %>%
+                            unique() %>% sort() %>% as.vector()),
+              selected = "TOTAL GRUPOS DE EDADES"),
+  selectInput("period2589", "Periodicidad",
+              choices = c(df.perfil.2589$periodicidad %>%
+                            unique() %>% sort() %>% as.vector()),
+              selected = "anual"),
+  selectInput("alojamiento2589", "Tipos de alojamiento",
+              choices = c(df.perfil.2589$`Tipos de alojamiento` %>%
+                            unique() %>% sort() %>% as.vector()),
+              selected = "TOTAL ALOJAMIENTOS", multiple = TRUE),
+  downloadButton('download2589',"Descargar datos (csv)")
+)
+
+
+## B. mainpanel
+perfil.mainpanel.2589 <- mainPanel(
+  h4("04. Turistas según grupos de edad y sexos por tipos de alojamiento", align = "left"),
+  
+  h1("", align = "left"),
+  dygraphOutput("dygraph2589"),
+  h4("", align = "left"),
+  
+  p(paste0("Fecha de actualización: ", Sys.Date())),
+  h1("", align = "left"),
+  
+  DT::dataTableOutput("df2589")
 )

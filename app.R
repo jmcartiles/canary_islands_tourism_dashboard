@@ -29,6 +29,7 @@ load(file = "data/egt_gasto_2530.RData")
 load(file = "data/egt_perfil_2597.RData")
 load(file = "data/egt_perfil_2587.RData")
 load(file = "data/egt_perfil_2588.RData")
+load(file = "data/egt_perfil_2589.RData")
 load(file = "data/egt_motivo_2646.RData")
 
 
@@ -95,10 +96,14 @@ ui <- fluidPage(
                       sidebarLayout(
                         perfil.sidebarpanel.2587,
                         perfil.mainpanel.2587)),
-             tabPanel(icon = icon("address-card"),"03. Turistas según grupo de edad por NUTS1 de residencia",
+             tabPanel(icon = icon("address-card"),"03. Turistas según grupos de edad por NUTS1 de residencia",
                       sidebarLayout(
                         perfil.sidebarpanel.2588,
-                        perfil.mainpanel.2588))
+                        perfil.mainpanel.2588)),
+             tabPanel(icon = icon("address-card"),"04. Turistas según grupos de edad y sexos por tipos de alojamiento",
+                      sidebarLayout(
+                        perfil.sidebarpanel.2589,
+                        perfil.mainpanel.2589))
              ),
              
              navbarMenu("Características del viaje",
@@ -187,6 +192,15 @@ server <- function(input, output) {
              periodicidad == input$period2588)
     return(data2588)
   })
+  
+  df.input.2589 <- reactive({
+    data2589 <- df.perfil.2589 %>%
+      filter(`Tipos de alojamiento` %in% input$alojamiento2589,
+             Sexos == input$sexo2589,
+             Edades == input$edad2589,
+             periodicidad == input$period2589)
+    return(data2589)
+  })
    
   # travel characteristics
    df.input.3 <- reactive({
@@ -225,6 +239,10 @@ server <- function(input, output) {
    
    output$df2588 <- DT::renderDataTable({
      df.input.2588()
+   })
+   
+   output$df2589 <- DT::renderDataTable({
+     df.input.2589()
    })
 
    # travel characteristics
@@ -315,6 +333,15 @@ server <- function(input, output) {
      
    })
    
+   output$dygraph2589 <- renderDygraph({
+     data2589 <- df.input.2589()[,c("Tipos de alojamiento", "fecha", "valor")] %>%
+       reshape(., idvar = "fecha", timevar = "Tipos de alojamiento", direction = "wide")
+     colnames(data2589) <- gsub("valor.", "", colnames(data2589))
+     
+     custom_dygraph(data2589, euros = FALSE, is.mill = FALSE)
+     
+   })
+   
    # travel characteristics
    output$df3graph <- renderDygraph({
      data3 <- df.input.3()[,c("paisesresidencia", "fecha", "valor")] %>%
@@ -337,6 +364,7 @@ server <- function(input, output) {
    output$download2 <- button_download_csv(df.input.2())
    output$download2587 <- button_download_csv(df.input.2587())
    output$download2588 <- button_download_csv(df.input.2588())
+   output$download2589 <- button_download_csv(df.input.2589())
    
    # travel characteristics
    output$download3 <- button_download_csv(df.input.3())
