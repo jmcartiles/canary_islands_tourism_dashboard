@@ -22,39 +22,14 @@ suppressPackageStartupMessages(library(stringr))
 
 
 
-
 # datasets
-# df.gasto.2528 <- suppressWarnings(istac("sec.hos.enc.ser.2528", POSIXct = TRUE)) %>%
-#   mutate(fecha = format(fecha, "%Y-%m-%d %H:%M:%OS"),
-#          periodicidad = replace(periodicidad, periodicidad=="cuatrimestral", "Trimestral"),
-#          periodicidad = replace(periodicidad, periodicidad=="anual", "Anual"))
-# save(df.gasto.2528, file = "data/egt_gasto_2528.RData")
-# df.gasto.2529 <- suppressWarnings(istac("sec.hos.enc.ser.2529", POSIXct = TRUE)) %>%
-#   mutate(fecha = format(fecha, "%Y-%m-%d %H:%M:%OS"),
-#          periodicidad = replace(periodicidad, periodicidad=="cuatrimestral", "Trimestral"),
-#          periodicidad = replace(periodicidad, periodicidad=="anual", "Anual"))
-# save(df.gasto.2529, file = "data/egt_gasto_2529.RData")
-# b1.gasto <- suppressWarnings(istac("sec.hos.enc.ser.2530", POSIXct = TRUE)) %>%
-#   mutate(fecha = format(fecha, "%Y-%m-%d %H:%M:%OS"),
-#          periodicidad = replace(periodicidad, periodicidad=="cuatrimestral", "Trimestral"),
-#          periodicidad = replace(periodicidad, periodicidad=="anual", "Anual"))
-# save(b1.gasto, file = "data/egt_gasto_2530.RData")
-# b2.perfil <- suppressWarnings(istac("sec.hos.enc.ser.2597", POSIXct = TRUE)) %>%
-#   mutate(fecha = format(fecha, "%Y-%m-%d %H:%M:%OS"),
-#          periodicidad = replace(periodicidad, periodicidad=="cuatrimestral", "Trimestral"),
-#          periodicidad = replace(periodicidad, periodicidad=="anual", "Anual"))
-# save(b2.perfil, file = "data/egt_perfil_2597.RData")
-# b3.motivos <- suppressWarnings(istac("sec.hos.enc.ser.2646", POSIXct = TRUE)) %>%
-#   mutate(fecha = format(fecha, "%Y-%m-%d %H:%M:%OS"),
-#          periodicidad = replace(periodicidad, periodicidad=="cuatrimestral", "Trimestral"),
-#          periodicidad = replace(periodicidad, periodicidad=="anual", "Anual"))
-# save(b3.motivos, file = "data/egt_motivo_2646.RData")
 load(file = "data/egt_gasto_2528.RData")
 load(file = "data/egt_gasto_2529.RData")
 load(file = "data/egt_gasto_2530.RData")
 load(file = "data/egt_perfil_2597.RData")
+load(file = "data/egt_perfil_2587.RData")
+load(file = "data/egt_perfil_2588.RData")
 load(file = "data/egt_motivo_2646.RData")
-
 
 
 
@@ -67,13 +42,17 @@ source("ui_profile_elements.R", encoding = "utf-8")
 source("ui_travelcharacteristics_elements.R", encoding = "utf-8")
 source("server_functions.R", encoding = "utf-8")
 
+
+
+
 # load map
-
-
 islas<-readOGR(dsn="data/islas_shp/islas_suav.shp", encodin = "UTF-8")
 
 islas<-spTransform(islas, CRS("+init=epsg:4326"))
 bounds<-bbox(islas)
+
+
+
 
 # user interface
 ui <- fluidPage(
@@ -105,18 +84,25 @@ ui <- fluidPage(
                                   sidebarLayout(
                                     gasto02.sidebarpanel,
                                     gasto02.mainpanel))
-                        
                         ),
              
              navbarMenu("Perfil del turista",
-             tabPanel(icon = icon("fa-chart-line"),"01. Turistas por islas según grupos de edad, sexos y países de residencia",
+             tabPanel(icon = icon("address-card"),"01. Turistas por islas según grupos de edad, sexos y países de residencia",
                       sidebarLayout(
                         perfil01.sidebarpanel,
-                        perfil01.mainpanel
-                       ))),
+                        perfil01.mainpanel)),
+             tabPanel(icon = icon("address-card"),"02. Turistas según sexos por NUTS1 de residencia",
+                      sidebarLayout(
+                        perfil.sidebarpanel.2587,
+                        perfil.mainpanel.2587)),
+             tabPanel(icon = icon("address-card"),"03. Turistas según grupo de edad por NUTS1 de residencia",
+                      sidebarLayout(
+                        perfil.sidebarpanel.2588,
+                        perfil.mainpanel.2588))
+             ),
              
              navbarMenu("Características del viaje",
-             tabPanel(icon = icon("fa-chart-line"),"01. Turistas por islas según países de residencia y motivos de la estancia",
+             tabPanel(icon = icon("sun"),"01. Turistas por islas según países de residencia y motivos de la estancia",
                       sidebarLayout(
                         caractviaje01.sidebarpanel,
                         caractviaje01.mainpanel
@@ -185,6 +171,22 @@ server <- function(input, output) {
              islas == input$isla2)
     return(data2)
   })
+  
+  df.input.2587 <- reactive({
+    data2587 <- df.perfil.2587 %>%
+      filter(NUTS1 %in% input$nuts12587,
+             Sexos == input$sexo2587,
+             periodicidad == input$period2587)
+    return(data2587)
+  })
+  
+  df.input.2588 <- reactive({
+    data2588 <- df.perfil.2588 %>%
+      filter(NUTS1 %in% input$nuts12588,
+             Edades == input$edad2588,
+             periodicidad == input$period2588)
+    return(data2588)
+  })
    
   # travel characteristics
    df.input.3 <- reactive({
@@ -215,6 +217,14 @@ server <- function(input, output) {
    # profile
    output$df2 <- DT::renderDataTable({
      df.input.2() %>% setNames(c("Edades","Sexos","Países de residencia","Islas","Periodos","Valor","Fecha","Periodicidad"))
+   })
+   
+   output$df2587 <- DT::renderDataTable({
+     df.input.2587()
+   })
+   
+   output$df2588 <- DT::renderDataTable({
+     df.input.2588()
    })
 
    # travel characteristics
@@ -280,6 +290,22 @@ server <- function(input, output) {
    })
    
    # profile
+   output$dygraph2587 <- renderDygraph({
+     data2587 <- df.input.2587()[,c("NUTS1", "fecha", "valor")] %>%
+       reshape(., idvar = "fecha", timevar = "NUTS1", direction = "wide")
+     colnames(data2587) <- gsub("valor.", "", colnames(data2587))
+     
+     custom_dygraph(data2587, euros = FALSE, is.mill = FALSE)
+   })
+   
+   output$dygraph2588 <- renderDygraph({
+     data2588 <- df.input.2588()[,c("NUTS1", "fecha", "valor")] %>%
+       reshape(., idvar = "fecha", timevar = "NUTS1", direction = "wide")
+     colnames(data2588) <- gsub("valor.", "", colnames(data2588))
+     
+     custom_dygraph(data2588, euros = FALSE, is.mill = FALSE)
+   })
+   
    output$df2graph <- renderDygraph({
      data2 <- df.input.2()[,c("paisesresidencia", "fecha", "valor")] %>%
        reshape(., idvar = "fecha", timevar = "paisesresidencia", direction = "wide")
@@ -309,6 +335,8 @@ server <- function(input, output) {
 
    # profile
    output$download2 <- button_download_csv(df.input.2())
+   output$download2587 <- button_download_csv(df.input.2587())
+   output$download2588 <- button_download_csv(df.input.2588())
    
    # travel characteristics
    output$download3 <- button_download_csv(df.input.3())

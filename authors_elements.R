@@ -10,7 +10,7 @@ authors.mainpanel <- mainPanel(
     tags$h2(""),
     
     tags$h4(
-      tags$a(href="http://jmcartiles-blog.netlify.com/",
+      tags$a(href="http://jmcartiles.netlify.com/",
              "José Manuel Cazorla Artiles")
     ),
     tags$p("Doctorando en Universidad de Las Palmas de Gran Canaria"),

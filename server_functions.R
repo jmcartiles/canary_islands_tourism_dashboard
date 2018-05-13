@@ -3,7 +3,7 @@
 # load necessary functions
 
 # dygraphs data with units in euros
-custom_dygraph <- function(df, euros, is.variation = FALSE) {
+custom_dygraph <- function(df, euros, is.variation = FALSE, is.mill = TRUE) {
   
   
   if(is.variation) {
@@ -12,7 +12,6 @@ custom_dygraph <- function(df, euros, is.variation = FALSE) {
     prueba <- NULL
   }
   
-  
   xts(df, as.Date(df$fecha, format = "%Y-%m-%d %H:%M:%OS")) %>%
     dygraph() %>%
     dyAxis(
@@ -20,11 +19,12 @@ custom_dygraph <- function(df, euros, is.variation = FALSE) {
       valueRange = prueba,
       valueFormatter = 'function(d){return d}',
       axisLabelFormatter = ifelse(is.variation == TRUE, 'function(d){return (d) + " %"}',
-                                  ifelse(is.variation == FALSE & euros == TRUE, 'function(d){return Math.round(d/1e6) + " mill.(\u20ac)"}',
-                                  'function(d){return Math.round(d/1e6) + " mill."}'))
-    ) %>%
-    dyOptions(fillGraph = TRUE, fillAlpha = 0.1) %>%
-    dyRangeSelector()
+                                  ifelse(is.variation == FALSE & euros == TRUE & is.mill == TRUE,
+                                         'function(d){return Math.round(d/1e6) + " mill.(\u20ac)"}',
+                                         'function(d){return d}'))
+      ) %>%
+      dyOptions(fillGraph = TRUE, fillAlpha = 0.1) %>%
+      dyRangeSelector()
   
 }
 
