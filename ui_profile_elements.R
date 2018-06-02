@@ -156,3 +156,4 @@ perfil.mainpanel.2589 <- mainPanel(
   
   DT::dataTableOutput("df2589")
 )
+

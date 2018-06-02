@@ -18,6 +18,8 @@ suppressPackageStartupMessages(library(rgdal))
 suppressPackageStartupMessages(library(rgeos))
 suppressPackageStartupMessages(library(lubridate))
 suppressPackageStartupMessages(library(stringr))
+suppressPackageStartupMessages(library(billboarder))
+
 
 
 
@@ -31,6 +33,8 @@ load(file = "data/egt_perfil_2587.RData")
 load(file = "data/egt_perfil_2588.RData")
 load(file = "data/egt_perfil_2589.RData")
 load(file = "data/egt_motivo_2646.RData")
+load(file = "data/egt_motivo_2609.RData")
+load(file = "data/egt_motivo_2610.RData")
 
 
 
@@ -107,11 +111,21 @@ ui <- fluidPage(
              ),
              
              navbarMenu("Características del viaje",
-             tabPanel(icon = icon("sun"),"01. Turistas por islas según países de residencia y motivos de la estancia",
+             tabPanel(icon = icon("coffee"),"01. Turistas por islas según países de residencia y motivos de la estancia",
                       sidebarLayout(
                         caractviaje01.sidebarpanel,
                         caractviaje01.mainpanel
-                        ))),
+                        )),
+             tabPanel(icon = icon("coffee"),"02. Turistas según aspectos en la elección de Canarias como destino turístico por tipos de alojamiento",
+                      sidebarLayout(
+                        caractviaje.sidebarpanel.2609,
+                        caractviaje.mainpanel.2609
+                        )),
+             tabPanel(icon = icon("coffee"),"03. Turistas según formas de conocer Canarias como destino turístico por países de residencia",
+                      sidebarLayout(
+                        caractviaje.sidebarpanel.2610,
+                        caractviaje.mainpanel.2610))
+             ),
              
              tabPanel("Autores",
                       authors.mainpanel
@@ -211,6 +225,44 @@ server <- function(input, output) {
               islas == input$isla3)
      return(data3)
    })
+   df.input.2609 <- reactive({
+     data2609 <- df.motivo.2609 %>%
+       select(-c(fecha, periodicidad)) %>%
+       filter(Periodos %in% input$period2609) %>% 
+       rename(aspectos = "Aspectos en la elección de Canarias") %>%
+       filter(aspectos %in% input$aspeleccion2609) %>% 
+       select(-Periodos) %>%
+       reshape(idvar = "aspectos", timevar = "Tipos de alojamiento", direction = "wide") # %>%
+
+     names(data2609) <- gsub("valor.", "", names(data2609))
+     data2609 <- data2609[, -grep("TOTAL ALOJAMIENTOS", names(data2609))]
+     data2609$Periodo <- input$period2609
+     return(data2609)
+   })
+   df.input.2610 <- reactive({
+     data2610 <- df.motivo.2610 %>%
+       select(-c(fecha, periodicidad)) %>%
+       filter(Periodos %in% input$period2610) %>% 
+       rename(residencia = "Países de residencia") %>%
+       filter(residencia %in% input$residencia2610) %>% 
+       select(-Periodos) %>%
+       reshape(idvar = "residencia", timevar = "Formas de conocer Canarias", direction = "wide") # %>%
+     
+     names(data2610) <- gsub("valor.", "", names(data2610))
+     # data2610 <- data2610[, -grep("TOTAL PAÍSES", names(data2610))]
+     data2610$Periodo <- input$period2610
+     return(data2610)
+   })
+   # 
+   # data2609 <- df.motivo.2609 %>%
+   #   select(-c(fecha, periodicidad)) %>%
+   #   filter(Periodos %in% "2017") %>% 
+   #   filter(`Aspectos en la elección de Canarias` %in% "Clima o sol") %>% 
+   #   select(-Periodos) %>%
+   #   reshape(idvar = "Tipos de alojamiento", timevar = "Aspectos en la elección de Canarias", direction = "wide") %>%
+   #   mutate(totrow = rowSums(.[,2:dim(.)[2]])) %>%
+   #   mutate_if(is.numeric, funs(./totrow)) %>%
+   #   select(-totrow)
    
    
    # table using input dataframes
@@ -248,6 +300,12 @@ server <- function(input, output) {
    # travel characteristics
    output$df3 <- DT::renderDataTable({
      df.input.3() %>% setNames(c("Motivos","Países de residencia","Islas","Periodos","Valor","Fecha","Periodicidad"))
+   })
+   output$df2609 <- DT::renderDataTable({
+     df.input.2609()
+   })
+   output$df2610 <- DT::renderDataTable({
+     df.input.2610()
    })
    
    
@@ -352,6 +410,52 @@ server <- function(input, output) {
      
    })
    
+   output$billboarderbar2609 <- renderBillboarder(
+     # dodge bar chart !
+     billboarder() %>%
+       bb_barchart(
+         data = df.input.2609() %>%
+           select(-Periodo) %>%
+           mutate(totrow = rowSums(.[,2:dim(.)[2]])) %>%
+           mutate_if(is.numeric, funs(./totrow)) %>%
+           select(-totrow) %>%
+           mutate_if(is.numeric, funs(round(.*100,2)))
+       ) %>%
+       bb_data(
+         names = names(df.input.2609())[2:dim(df.input.2609())[2]]
+       ) %>% 
+       bb_y_grid(show = TRUE) %>%
+       bb_y_axis(tick = list(format = suffix("%")),
+                 label = list(text = "", position = "outer-top")) %>% 
+       # bb_legend(position = "inset", inset = list(anchor = "bottom-center")) %>% 
+       bb_labs(title = "",
+               caption = "")
+     
+   )
+   
+   output$billboarderbar2610 <- renderBillboarder(
+     # dodge bar chart !
+     billboarder() %>%
+       bb_barchart(
+         data = df.input.2610() %>%
+           select(-Periodo) %>%
+           mutate(totrow = rowSums(.[,2:dim(.)[2]])) %>%
+           mutate_if(is.numeric, funs(./totrow)) %>%
+           select(-totrow) %>%
+           mutate_if(is.numeric, funs(round(.*100,2)))
+       ) %>%
+       bb_data(
+         names = names(df.input.2610())[2:dim(df.input.2610())[2]]
+       ) %>% 
+       bb_y_grid(show = TRUE) %>%
+       bb_y_axis(tick = list(format = suffix("%")),
+                 label = list(text = "", position = "outer-top")) %>% 
+       # bb_legend(position = "inset", inset = list(anchor = "bottom-center")) %>% 
+       bb_labs(title = "",
+               caption = "")
+     
+   )
+   
    
    # download input dataframes
    
@@ -368,6 +472,8 @@ server <- function(input, output) {
    
    # travel characteristics
    output$download3 <- button_download_csv(df.input.3())
+   output$download2609 <- button_download_csv(df.input.2609())
+   output$download2610 <- button_download_csv(df.input.2610())
    
    
    # map

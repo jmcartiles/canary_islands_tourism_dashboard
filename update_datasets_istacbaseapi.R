@@ -80,4 +80,8 @@ b3.motivos <- get_data_labelled(istacr.id = "sec.hos.enc.ser.2646") %>%
          periodos = "Periodos")
 save(b3.motivos, file = "data/egt_motivo_2646.RData")
 
+pmap(list(istacr.id = list("sec.hos.enc.ser.2609", "sec.hos.enc.ser.2610"),
+          section = rep("motivo", 2)),
+     update_dataset)
+
 
