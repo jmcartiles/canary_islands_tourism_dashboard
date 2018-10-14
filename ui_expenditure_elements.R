@@ -28,7 +28,10 @@ gasto.sidebarpanel.2528 <- div(id = "Sidebar",
                                              choices = c(df.gasto.2528$periodicidad %>%
                                                            unique() %>% sort() %>% as.vector()),
                                              selected = "anual"),
-                                 downloadButton('download2528',"Descargar datos (csv)")
+                                 downloadButton('download2528',"Descargar datos (csv)"),
+                                 
+                                 width = 3
+                                 
                                  )
                                )
 
@@ -49,7 +52,10 @@ gasto.mainpanel.2528 <- mainPanel(
   p(paste0("Fecha de actualización: ", Sys.Date())),
   h1("", align = "left"),
   
-  DT::dataTableOutput("df2528")
+  DT::dataTableOutput("df2528"),
+  
+  width = 9
+  
 )
 
 # 02. Gasto turistico total por NUTS1 de residencia ----
@@ -73,7 +79,10 @@ gasto.sidebarpanel.2529 <- sidebarPanel(
               choices = c(df.gasto.2529$periodicidad %>%
                             unique() %>% sort() %>% as.vector()),
               selected = "anual"),
-  downloadButton('download2529',"Descargar datos (csv)")
+  downloadButton('download2529',"Descargar datos (csv)"),
+  
+  width = 3
+  
   )
 
 
@@ -88,7 +97,10 @@ gasto.mainpanel.2529 <- mainPanel(
   p(paste0("Fecha de actualización: ", Sys.Date())),
   h1("", align = "left"),
   
-  DT::dataTableOutput("df2529")
+  DT::dataTableOutput("df2529"),
+  
+  width = 9
+  
 )
 
 # 03. Gasto turistico total por islas segun paises de residencia ----
@@ -115,7 +127,10 @@ gasto01.sidebarpanel <- sidebarPanel(
               choices = c(b1.gasto$periodicidad %>%
                             unique() %>% sort() %>% as.vector()),
               selected = "anual"),
-  downloadButton('download1',"Descargar datos (csv)")
+  downloadButton('download1',"Descargar datos (csv)"),
+  
+  width = 3
+  
 )
 
 
@@ -130,7 +145,10 @@ gasto01.mainpanel <- mainPanel(
   p(paste0("Fecha de actualización: ", Sys.Date())),
   h1("", align = "left"),
   
-  DT::dataTableOutput("df1")
+  DT::dataTableOutput("df1"),
+  
+  width = 9
+  
 )
 
 # 04. Mapa gasto turistico total por islas segun paises de residencia ----
@@ -152,7 +170,10 @@ gasto02.sidebarpanel <- sidebarPanel(
   selectInput("anyom", "Año",
               choices = c(b1.gasto$fecha %>% lubridate::year() %>%
                             unique() %>% sort() %>% as.vector()),
-              selected = "2017")
+              selected = "2017"),
+  
+  width = 3
+  
 )
 
 
@@ -165,7 +186,8 @@ gasto02.mainpanel <- mainPanel(
   h4("", align = "left"),
   
   p(paste0("Fecha de actualización: ", Sys.Date())),
-  h1("", align = "left")
+  h1("", align = "left"),
   
+  width = 9
   
 )

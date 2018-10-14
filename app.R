@@ -61,6 +61,7 @@ bounds<-bbox(islas)
 
 # user interface
 ui <- fluidPage(
+  titlePanel("", windowTitle = "Canary Islands Tourism Dashboard"),
   useShinyjs(),
   theme = shinytheme(theme = "flatly"),
   navbarPage(tagList(a("ISTAC",

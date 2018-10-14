@@ -27,7 +27,10 @@ caractviaje01.sidebarpanel <- sidebarPanel(
                 choices = c(b3.motivos$periodicidad %>%
                               unique() %>% sort() %>% as.vector()),
                 selected = "anual"),
-    downloadButton('download3',"Descargar datos (csv)")
+    downloadButton('download3',"Descargar datos (csv)"),
+    
+    width = 3
+    
   )
 
 
@@ -42,7 +45,10 @@ caractviaje01.mainpanel <- mainPanel(
   p(paste0("Fecha de actualización: ", Sys.Date())),
   h1("", align = "left"),
   
-  DT::dataTableOutput("df3")
+  DT::dataTableOutput("df3"),
+  
+  width = 9
+  
 )
 
 
@@ -62,7 +68,10 @@ caractviaje.sidebarpanel.2609 <- sidebarPanel(
               choices = c(df.motivo.2609$Periodos %>%
                             unique() %>% sort() %>% as.vector()),
               selected = "2017"),
-  downloadButton('download2609',"Descargar datos (csv)")
+  downloadButton('download2609',"Descargar datos (csv)"),
+  
+  width = 3
+  
 )
 
 
@@ -77,7 +86,10 @@ caractviaje.mainpanel.2609 <- mainPanel(
   p(paste0("Fecha de actualización: ", Sys.Date())),
   h1("", align = "left"),
   
-  DT::dataTableOutput("df2609")
+  DT::dataTableOutput("df2609"),
+  
+  width = 9
+  
 )
 
 
@@ -97,7 +109,10 @@ caractviaje.sidebarpanel.2610 <- sidebarPanel(
               choices = c(df.motivo.2610$Periodos %>%
                             unique() %>% sort() %>% as.vector()),
               selected = "2017"),
-  downloadButton('download2610',"Descargar datos (csv)")
+  downloadButton('download2610',"Descargar datos (csv)"),
+  
+  width = 3
+  
 )
 
 
@@ -112,7 +127,11 @@ caractviaje.mainpanel.2610 <- mainPanel(
   p(paste0("Fecha de actualización: ", Sys.Date())),
   h1("", align = "left"),
   
-  DT::dataTableOutput("df2610")
+  DT::dataTableOutput("df2610"),
+  
+  width = 9
+  
 )
+
 
 

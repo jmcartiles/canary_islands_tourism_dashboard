@@ -32,7 +32,10 @@ perfil01.sidebarpanel <- sidebarPanel(
               choices = c(b2.perfil$periodicidad %>%
                             unique() %>% sort() %>% as.vector()),
               selected = "anual"),
-  downloadButton('download2',"Descargar datos (csv)")
+  downloadButton('download2',"Descargar datos (csv)"),
+  
+  width = 3
+  
 )
 
 
@@ -47,7 +50,10 @@ perfil01.mainpanel <- mainPanel(
   p(paste0("Fecha de actualización: ", Sys.Date())),
   h1("", align = "left"),
   
-  DT::dataTableOutput("df2")
+  DT::dataTableOutput("df2"),
+  
+  width = 9
+  
 )
 
 
@@ -67,7 +73,10 @@ perfil.sidebarpanel.2587 <- sidebarPanel(
               choices = c(df.perfil.2587$NUTS1 %>%
                             unique() %>% sort() %>% as.vector()),
               selected = "ALEMANIA", multiple = TRUE),
-  downloadButton('download2587',"Descargar datos (csv)")
+  downloadButton('download2587',"Descargar datos (csv)"),
+  
+  width = 3
+  
 )
 
 
@@ -82,7 +91,10 @@ perfil.mainpanel.2587 <- mainPanel(
   p(paste0("Fecha de actualización: ", Sys.Date())),
   h1("", align = "left"),
   
-  DT::dataTableOutput("df2587")
+  DT::dataTableOutput("df2587"),
+  
+  width = 9
+  
 )
 
 # 03. Turistas segun grupo de edad por NUTS1 de residencia ----
@@ -101,7 +113,10 @@ perfil.sidebarpanel.2588 <- sidebarPanel(
               choices = c(df.perfil.2588$NUTS1 %>%
                             unique() %>% sort() %>% as.vector()),
               selected = "ALEMANIA", multiple = TRUE),
-  downloadButton('download2588',"Descargar datos (csv)")
+  downloadButton('download2588',"Descargar datos (csv)"),
+  
+  width = 3
+  
 )
 
 
@@ -116,7 +131,10 @@ perfil.mainpanel.2588 <- mainPanel(
   p(paste0("Fecha de actualización: ", Sys.Date())),
   h1("", align = "left"),
   
-  DT::dataTableOutput("df2588")
+  DT::dataTableOutput("df2588"),
+  
+  width = 9
+  
 )
 
 # 04. Turistas segun grupos de edad y sexos por tipos de alojamiento ----
@@ -139,7 +157,10 @@ perfil.sidebarpanel.2589 <- sidebarPanel(
               choices = c(df.perfil.2589$`Tipos de alojamiento` %>%
                             unique() %>% sort() %>% as.vector()),
               selected = "TOTAL ALOJAMIENTOS", multiple = TRUE),
-  downloadButton('download2589',"Descargar datos (csv)")
+  downloadButton('download2589',"Descargar datos (csv)"),
+  
+  width = 3
+  
 )
 
 
@@ -154,6 +175,9 @@ perfil.mainpanel.2589 <- mainPanel(
   p(paste0("Fecha de actualización: ", Sys.Date())),
   h1("", align = "left"),
   
-  DT::dataTableOutput("df2589")
+  DT::dataTableOutput("df2589"),
+  
+  width = 9
+  
 )
 

@@ -24,7 +24,9 @@ description.mainpanel <- mainPanel(
     # tags$h6("Aplicación Shiny en proceso de desarrollo... se muestran resultados preliminares."),
     
     hr(),
-    tags$h6("Aplicación Shiny en proceso de desarrollo... se muestran resultados preliminares.")
+    tags$h6("Aplicación",
+    img(src = "https://www.rstudio.com/wp-content/uploads/2014/04/shiny.png", height = "30px"),
+    "en proceso de desarrollo... se muestran resultados preliminares.")
     
     ), align = "left")
 
