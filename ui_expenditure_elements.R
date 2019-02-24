@@ -49,7 +49,7 @@ gasto.mainpanel.2528 <- mainPanel(
   dygraphOutput("dygraph2528"),
   h4("", align = "left"),
   
-  p(paste0("Fecha de actualización: ", Sys.Date())),
+  p("Fecha de actualización: 14/10/2018"),
   h1("", align = "left"),
   
   DT::dataTableOutput("df2528"),
@@ -94,7 +94,7 @@ gasto.mainpanel.2529 <- mainPanel(
   dygraphOutput("dygraph2529"),
   h4("", align = "left"),
   
-  p(paste0("Fecha de actualización: ", Sys.Date())),
+  p("Fecha de actualización: 14/10/2018"),
   h1("", align = "left"),
   
   DT::dataTableOutput("df2529"),
@@ -142,7 +142,7 @@ gasto01.mainpanel <- mainPanel(
   dygraphOutput("df1graph"),
   h4("", align = "left"),
   
-  p(paste0("Fecha de actualización: ", Sys.Date())),
+  p("Fecha de actualización: 14/10/2018"),
   h1("", align = "left"),
   
   DT::dataTableOutput("df1"),
@@ -185,9 +185,37 @@ gasto02.mainpanel <- mainPanel(
   leafletOutput("islasMap", height=400),
   h4("", align = "left"),
   
-  p(paste0("Fecha de actualización: ", Sys.Date())),
+  p("Fecha de actualización: 14/10/2018"),
   h1("", align = "left"),
   
   width = 9
+  
+)
+
+# 05. Reparto del gasto turístico por islas y países de residencia ----
+
+## A. sidebarpanel
+gasto03.sidebarpanel <- sidebarPanel(
+  selectInput("period3", "Periodicidad",
+              choices = c(b1.gasto$periodicidad %>%
+                            unique() %>% sort() %>% as.vector()),
+              selected = "Anual"),
+  selectInput("periods3", "Periodo",
+              choices = c(b1.gasto$periodos %>%
+                            unique() %>% sort() %>% as.vector()),
+              selected = "2017"),
+  
+  width = 3
+  
+)
+
+
+## B. mainpanel
+gasto03.mainpanel <- mainPanel(
+  h4("05. Reparto del gasto turístico por islas y países de residencia", align = "left"),
+  
+  h1("", align = "left"),
+  sunburstOutput("df13graph"),
+  h4("", align = "left")
   
 )

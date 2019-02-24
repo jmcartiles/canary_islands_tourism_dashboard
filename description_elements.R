@@ -11,13 +11,14 @@ description.mainpanel <- mainPanel(
                   "Instituto Canario de Estadística (ISTAC)"),
            "."),
     tags$p("Actualmente, recoge datos de gasto y llegada de turistas según países de residencia, perfil y características del viaje."),
+    tags$p("Se emplea metodología 2016."),
     tags$p("Los datos se muestran mediante gráficos dinámicos y tablas que pueden descargarse en formato CSV."),
     
     tags$p("Los datos publicados se han obtenido usando la API base del",
            tags$a(href = "http://www.gobiernodecanarias.org/istac/",
                   "ISTAC"),
            ", a través de la librería ",
-           tags$a(href = "https://github.com/rOpenSpain/istacr", "istacr"),
+           tags$a(href = "https://github.com/rOpenSpain/istacr", "istacbaser"),
            "."),
     
     tags$h2(""),

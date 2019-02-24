@@ -47,7 +47,7 @@ perfil01.mainpanel <- mainPanel(
   dygraphOutput("df2graph"),
   h4("", align = "left"),
   
-  p(paste0("Fecha de actualización: ", Sys.Date())),
+  p("Fecha de actualización: 14/10/2018"),
   h1("", align = "left"),
   
   DT::dataTableOutput("df2"),
@@ -88,7 +88,7 @@ perfil.mainpanel.2587 <- mainPanel(
   dygraphOutput("dygraph2587"),
   h4("", align = "left"),
   
-  p(paste0("Fecha de actualización: ", Sys.Date())),
+  p("Fecha de actualización: 14/10/2018"),
   h1("", align = "left"),
   
   DT::dataTableOutput("df2587"),
@@ -128,7 +128,7 @@ perfil.mainpanel.2588 <- mainPanel(
   dygraphOutput("dygraph2588"),
   h4("", align = "left"),
   
-  p(paste0("Fecha de actualización: ", Sys.Date())),
+  p("Fecha de actualización: 14/10/2018"),
   h1("", align = "left"),
   
   DT::dataTableOutput("df2588"),
@@ -172,7 +172,7 @@ perfil.mainpanel.2589 <- mainPanel(
   dygraphOutput("dygraph2589"),
   h4("", align = "left"),
   
-  p(paste0("Fecha de actualización: ", Sys.Date())),
+  p("Fecha de actualización: 14/10/2018"),
   h1("", align = "left"),
   
   DT::dataTableOutput("df2589"),

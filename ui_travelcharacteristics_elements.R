@@ -42,7 +42,7 @@ caractviaje01.mainpanel <- mainPanel(
   dygraphOutput("df3graph"),
   h4("", align = "left"),
   
-  p(paste0("Fecha de actualización: ", Sys.Date())),
+  p("Fecha de actualización: 14/10/2018"),
   h1("", align = "left"),
   
   DT::dataTableOutput("df3"),
@@ -83,7 +83,7 @@ caractviaje.mainpanel.2609 <- mainPanel(
   billboarderOutput("billboarderbar2609"),
   h4("", align = "left"),
   
-  p(paste0("Fecha de actualización: ", Sys.Date())),
+  p("Fecha de actualización: 14/10/2018"),
   h1("", align = "left"),
   
   DT::dataTableOutput("df2609"),
@@ -124,7 +124,7 @@ caractviaje.mainpanel.2610 <- mainPanel(
   billboarderOutput("billboarderbar2610"),
   h4("", align = "left"),
   
-  p(paste0("Fecha de actualización: ", Sys.Date())),
+  p("Fecha de actualización: 14/10/2018"),
   h1("", align = "left"),
   
   DT::dataTableOutput("df2610"),

@@ -19,6 +19,8 @@ suppressPackageStartupMessages(library(rgeos))
 suppressPackageStartupMessages(library(lubridate))
 suppressPackageStartupMessages(library(stringr))
 suppressPackageStartupMessages(library(billboarder))
+suppressPackageStartupMessages(library(sunburstR))
+
 
 
 
@@ -89,7 +91,11 @@ ui <- fluidPage(
                          tabPanel(icon = icon("globe"), "04. Mapa gasto turístico total por islas según países de residencia",
                                   sidebarLayout(
                                     gasto02.sidebarpanel,
-                                    gasto02.mainpanel))
+                                    gasto02.mainpanel)),
+                        tabPanel(icon = icon("chart-pie"), "05. Reparto del gasto turístico por islas y países de residencia",
+                                 sidebarLayout(
+                                   gasto03.sidebarpanel,
+                                   gasto03.mainpanel))
                         ),
              
              navbarMenu("Perfil del turista",
@@ -179,6 +185,20 @@ server <- function(input, output) {
              periodicidad == input$period1,
              islas %in% input$isla1)
     return(data1)
+  })
+  
+  df.input.13 <- reactive({
+    data3 <- b1.gasto %>%
+      filter(indicadoresgasto != "Gasto total",
+             paisesresidencia != "TOTAL PAÍSES",
+             islas != "CANARIAS",
+             indicadores == "Valor absoluto",
+             periodicidad == input$period3,
+             periodos == input$periods3) %>%
+      mutate(V1 = paste(indicadoresgasto, paisesresidencia, islas, sep = "-"),
+             V2 = valor) %>%
+      select(V1, V2)
+    return(data3)
   })
   
   # profile
@@ -364,6 +384,10 @@ server <- function(input, output) {
      
      custom_dygraph(data1, euros = TRUE, is.variation = is.variation.1)
      
+   })
+   
+   output$df13graph <- renderSunburst({
+     sunburst(df.input.13(), legend = FALSE)
    })
    
    # profile

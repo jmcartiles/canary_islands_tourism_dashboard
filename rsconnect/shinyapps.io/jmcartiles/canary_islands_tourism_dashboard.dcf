@@ -5,9 +5,9 @@ account: jmcartiles
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 317724
-bundleId: 1641994
+bundleId: 1895804
 url: https://jmcartiles.shinyapps.io/canary_islands_tourism_dashboard/
-when: 1539520801.98652
+when: 1551009653.94903
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: islas.R|update_datasets_istacbaseapi.R
