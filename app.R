@@ -6,7 +6,7 @@
 # load packages
 suppressPackageStartupMessages(library(shiny))
 suppressPackageStartupMessages(library(shinythemes))
-suppressPackageStartupMessages(library(istacr))
+suppressPackageStartupMessages(library(istacbaser))
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(xts))
 suppressPackageStartupMessages(library(dygraphs))

@@ -5,7 +5,7 @@
 # load datasets from istac base API using istacr
 
 # load necessary packages
-suppressPackageStartupMessages(library(istacr))
+suppressPackageStartupMessages(library(istacbaser))
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(purrr))
 
